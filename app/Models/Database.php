@@ -19,7 +19,6 @@ class Database
         }
     }
 
-    // Ejecutar consulta preparada
     public function query($sql, $params = [])
     {
         $stmt = $this->pdo->prepare($sql);
@@ -27,19 +26,16 @@ class Database
         return $stmt;
     }
 
-    // Obtener un solo registro
     public function fetch($sql, $params = [])
     {
         return $this->query($sql, $params)->fetch();
     }
 
-    // Obtener múltiples registros
     public function fetchAll($sql, $params = [])
     {
         return $this->query($sql, $params)->fetchAll();
     }
 
-    // Último ID insertado
     public function lastInsertId()
     {
         return $this->pdo->lastInsertId();

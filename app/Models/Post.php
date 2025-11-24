@@ -33,6 +33,23 @@ class Post
         return $this;
     }
 
+    // Attach tags to a post (expects array of tag ids)
+    public function setTags($postId, $tagIds)
+    {
+        // Remove existing
+        $this->db->query("DELETE FROM post_tags WHERE post_id = ?", [$postId]);
+        if (empty($tagIds)) return;
+        foreach ($tagIds as $tid) {
+            $this->db->query("INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)", [$postId, $tid]);
+        }
+    }
+
+    // Get tags for a post
+    public function getTags($postId)
+    {
+        return $this->db->fetchAll("SELECT t.* FROM tags t JOIN post_tags pt ON t.id = pt.tag_id WHERE pt.post_id = ?", [$postId]);
+    }
+
     // Actualizar post
     public function update($id, $title, $content, $category_id = null, $image = null)
     {
@@ -51,12 +68,44 @@ class Post
     // Obtener post por ID
     public function getById($id)
     {
-        return $this->db->fetch("SELECT * FROM posts WHERE id = ?", [$id]);
+        return $this->db->fetch("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?", [$id]);
     }
 
     // Obtener todos los posts
     public function getAll()
     {
-        return $this->db->fetchAll("SELECT * FROM posts ORDER BY created_at DESC");
+        return $this->db->fetchAll("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC");
+    }
+
+    // Obtener posts de un usuario
+    public function getByUser($user_id)
+    {
+        return $this->db->fetchAll("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id WHERE p.user_id = ? ORDER BY p.created_at DESC", [$user_id]);
+    }
+
+    // Buscar posts por texto
+    public function search($text)
+    {
+        $query = "%" . $text . "%";
+        return $this->db->fetchAll(
+            "SELECT DISTINCT p.*, u.username, u.profile_image FROM posts p 
+             LEFT JOIN post_tags pt ON p.id = pt.post_id 
+             LEFT JOIN tags t ON pt.tag_id = t.id 
+             JOIN users u ON p.user_id = u.id
+             WHERE p.title LIKE ? OR p.content LIKE ? OR t.name LIKE ?",
+            [$query, $query, $query]
+        );
+    }
+
+    // Filtrar posts por categoría
+    public function filterByCategory($category_id)
+    {
+        return $this->db->fetchAll("SELECT * FROM posts WHERE category_id = ? ORDER BY created_at DESC", [$category_id]);
+    }
+
+    // Obtener posts recientes
+    public function getRecent($limit = 5)
+    {
+        return $this->db->fetchAll("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT ?", [$limit]);
     }
 }

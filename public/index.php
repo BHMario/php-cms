@@ -1,4 +1,9 @@
 <?php
+// Iniciar sesiones (necesario para login/registro y autorización)
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
+
 require_once __DIR__ . '/../app/Router.php';
 
 // Capturar la URL solicitada
