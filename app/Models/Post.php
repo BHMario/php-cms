@@ -87,14 +87,25 @@ class Post
     public function search($text)
     {
         $query = "%" . $text . "%";
-        return $this->db->fetchAll(
-            "SELECT DISTINCT p.*, u.username, u.profile_image FROM posts p 
-             LEFT JOIN post_tags pt ON p.id = pt.post_id 
-             LEFT JOIN tags t ON pt.tag_id = t.id 
-             JOIN users u ON p.user_id = u.id
-             WHERE p.title LIKE ? OR p.content LIKE ? OR t.name LIKE ?",
-            [$query, $query, $query]
-        );
+        // Intenta la búsqueda con tags; si falla (tablas no existen), busca sin tags
+        try {
+            return $this->db->fetchAll(
+                "SELECT DISTINCT p.*, u.username, u.profile_image FROM posts p 
+                 LEFT JOIN post_tags pt ON p.id = pt.post_id 
+                 LEFT JOIN tags t ON pt.tag_id = t.id 
+                 JOIN users u ON p.user_id = u.id
+                 WHERE p.title LIKE ? OR p.content LIKE ? OR t.name LIKE ?",
+                [$query, $query, $query]
+            );
+        } catch (PDOException $e) {
+            // Si falla por tablas no encontradas, busca solo en título y contenido
+            return $this->db->fetchAll(
+                "SELECT p.*, u.username, u.profile_image FROM posts p 
+                 JOIN users u ON p.user_id = u.id
+                 WHERE p.title LIKE ? OR p.content LIKE ?",
+                [$query, $query]
+            );
+        }
     }
 
     // Filtrar posts por categoría

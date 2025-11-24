@@ -146,7 +146,7 @@ class UserController
         require_once __DIR__ . '/../Models/Follower.php';
         $f = new Follower();
         $f->follow($_SESSION['user_id'], $id);
-        header("Location: /users/{$id}"); exit;
+        header("Location: /users/" . (int)$id); exit;
     }
 
     public function unfollow($id)
@@ -157,6 +157,6 @@ class UserController
         require_once __DIR__ . '/../Models/Follower.php';
         $f = new Follower();
         $f->unfollow($_SESSION['user_id'], $id);
-        header("Location: /users/{$id}"); exit;
+        header("Location: /users/" . (int)$id); exit;
     }
 }
