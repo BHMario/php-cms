@@ -79,6 +79,20 @@ CREATE TABLE IF NOT EXISTS followers (
     FOREIGN KEY (target_user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE KEY ux_follow (user_id, target_user_id)
 );
+ 
+-- Tabla de notificaciones
+CREATE TABLE IF NOT EXISTS notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    actor_id INT NOT NULL,
+    type ENUM('follow','post','like','comment') DEFAULT 'follow',
+    post_id INT DEFAULT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
 
 -- Añadir columna bio a usuarios si no existe
 ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT NULL AFTER profile_image;

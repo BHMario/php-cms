@@ -40,4 +40,9 @@ class Database
     {
         return $this->pdo->lastInsertId();
     }
+
+    public function getConnection()
+    {
+        return $this->pdo;
+    }
 }

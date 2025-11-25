@@ -19,7 +19,7 @@
             </button>
             <div class="nav-links" id="nav-links">
                 <a href="/">Inicio</a>
-                <a href="/posts">Posts</a>
+                <a href="/posts">Mis posts</a>
                 <form action="/" method="get" class="nav-search" style="display:inline-block; margin-left:0.5rem;">
                     <input type="search" name="q" placeholder="Buscar posts..." aria-label="Buscar" />
                 </form>
@@ -27,10 +27,23 @@
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <?php
                     require_once __DIR__ . '/../../Models/User.php';
+                    require_once __DIR__ . '/../../Models/Notification.php';
+                    require_once __DIR__ . '/../../Models/Database.php';
                     $userModel = new User();
                     $currentUser = $userModel->getById($_SESSION['user_id']);
                     $profileImg = !empty($currentUser['profile_image']) ? $currentUser['profile_image'] : 'assets/images/default-avatar.svg';
+                    
+                    // Obtener notificaciones no leídas
+                    $db = new Database();
+                    $notificationModel = new Notification($db->getConnection());
+                    $unreadCount = $notificationModel->countUnread($_SESSION['user_id']);
                     ?>
+                    <a href="/notifications" class="notifications-link" title="Notificaciones">
+                        📬 
+                        <?php if ($unreadCount > 0): ?>
+                            <span class="notification-badge"><?php echo (int)$unreadCount; ?></span>
+                        <?php endif; ?>
+                    </a>
                     <a href="/profile" class="profile-link" style="display:inline-flex; align-items:center; gap:0.5rem;">
                         <img src="/<?= htmlspecialchars($profileImg) ?>" alt="Perfil" class="avatar header-avatar" style="width:34px;height:34px; object-fit:cover;" />
                         <span>Perfil</span>

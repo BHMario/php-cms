@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/Notification.php';
 
 class Like
 {
@@ -12,12 +13,23 @@ class Like
 
     public function create($post_id, $user_id)
     {
-        // Avoid duplicate likes
         if ($this->userLiked($post_id, $user_id)) return null;
         $this->db->query(
             "INSERT INTO likes (post_id, user_id) VALUES (?, ?)",
             [$post_id, $user_id]
         );
+
+        // Crear notificación de like para el autor del post (si no es el mismo usuario)
+        try {
+            $post = $this->db->fetch("SELECT user_id FROM posts WHERE id = ?", [$post_id]);
+            if ($post && isset($post['user_id']) && $post['user_id'] != $user_id) {
+                $notification = new Notification($this->db->getConnection());
+                $notification->create($post['user_id'], $user_id, 'like', $post_id);
+            }
+        } catch (Exception $e) {
+
+        }
+
         return $this->db->lastInsertId();
     }
 

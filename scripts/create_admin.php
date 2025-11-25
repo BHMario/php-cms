@@ -1,5 +1,5 @@
 <?php
-// Usage: php scripts/create_admin.php admin_username admin_password
+// Crear un usuario administrador desde la línea de comandos
 require_once __DIR__ . '/../app/Models/User.php';
 
 if ($argc < 3) {

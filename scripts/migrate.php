@@ -1,6 +1,6 @@
 <?php
 /**
- * Migration script to create new tables and columns for the blog CMS.
+ * Crear nuevas tablas y columas.
  * Run: php migrate.php
  */
 
@@ -14,14 +14,14 @@ try {
     
     echo "Conectado a la base de datos.\n";
     
-    // Create tags table
+    // Crear tabla tags
     $pdo->exec("CREATE TABLE IF NOT EXISTS tags (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL UNIQUE
     )");
-    echo "✓ Tabla 'tags' creada/verificada.\n";
+    echo "Tabla 'tags' creada/verificada.\n";
     
-    // Create post_tags table
+    // Crear tabla post_tags
     $pdo->exec("CREATE TABLE IF NOT EXISTS post_tags (
         post_id INT NOT NULL,
         tag_id INT NOT NULL,
@@ -29,9 +29,9 @@ try {
         FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
         FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
     )");
-    echo "✓ Tabla 'post_tags' creada/verificada.\n";
+    echo "Tabla 'post_tags' creada/verificada.\n";
     
-    // Create followers table
+    // Crear tabla followers
     $pdo->exec("CREATE TABLE IF NOT EXISTS followers (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -41,20 +41,43 @@ try {
         FOREIGN KEY (target_user_id) REFERENCES users(id) ON DELETE CASCADE,
         UNIQUE KEY ux_follow (user_id, target_user_id)
     )");
-    echo "✓ Tabla 'followers' creada/verificada.\n";
+    echo "Tabla 'followers' creada/verificada.\n";
     
-    // Add bio column to users if not exists
+    // Añadir columna bio a users si no existe
     $result = $pdo->query("SHOW COLUMNS FROM users LIKE 'bio'");
     if ($result->rowCount() === 0) {
         $pdo->exec("ALTER TABLE users ADD COLUMN bio TEXT NULL AFTER profile_image");
-        echo "✓ Columna 'bio' añadida a 'users'.\n";
+        echo "Columna 'bio' añadida a 'users'.\n";
     } else {
-        echo "✓ Columna 'bio' ya existe en 'users'.\n";
+        echo "Columna 'bio' ya existe en 'users'.\n";
     }
     
-    echo "\n✅ Migración completada exitosamente.\n";
+    // Crear tabla notifications (incluir tipos like/comment)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS notifications (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        actor_id INT NOT NULL,
+        type ENUM('follow','post','like','comment') DEFAULT 'follow',
+        post_id INT DEFAULT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    )");
+    echo "Tabla 'notifications' creada/verificada.\n";
+
+    // Asegurar que la columna type de notifications incluya los nuevos valores enum
+    try {
+        $pdo->exec("ALTER TABLE notifications MODIFY COLUMN type ENUM('follow','post','like','comment') DEFAULT 'follow'");
+        echo "Columna 'type' de notifications actualizada con nuevos tipos.\n";
+    } catch (Exception $e) {
+        echo "No se pudo actualizar la columna 'type' de notifications: " . $e->getMessage() . "\n";
+    }
+    
+    echo "\nMigración completada exitosamente.\n";
     
 } catch (PDOException $e) {
-    echo "❌ Error de migración: " . $e->getMessage() . "\n";
+    echo "Error de migración: " . $e->getMessage() . "\n";
     exit(1);
 }

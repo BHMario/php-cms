@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/Notification.php';
 
 class Comment
 {
@@ -16,6 +17,18 @@ class Comment
             "INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)",
             [$post_id, $user_id, $content]
         );
+        
+        // Crear notificación de comentario para el autor del post (si no es el mismo usuario)
+        try {
+            $post = $this->db->fetch("SELECT user_id FROM posts WHERE id = ?", [$post_id]);
+            if ($post && isset($post['user_id']) && $post['user_id'] != $user_id) {
+                $notification = new Notification($this->db->getConnection());
+                $notification->create($post['user_id'], $user_id, 'comment', $post_id);
+            }
+        } catch (Exception $e) {
+            
+        }
+
         return $this->db->lastInsertId();
     }
 

@@ -13,13 +13,12 @@ class HomeController
             try {
                 $posts = $postModel->search($q);
             } catch (Exception $e) {
-                // If search fails, fall back to empty list and avoid breaking the page
                 $posts = [];
             }
         } else {
             $posts = $postModel->getAll();
         }
-        // Añadir contadores de likes y comentarios
+        // Contenedores de likes y comentarios
         require_once __DIR__ . '/../Models/Like.php';
         require_once __DIR__ . '/../Models/Comment.php';
         $likeModel = new Like();

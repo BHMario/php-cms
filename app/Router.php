@@ -118,6 +118,27 @@ class Router
             return;
         }
 
+        // Rutas de notificaciones
+        if ($segments[0] === 'notifications') {
+            require_once __DIR__ . '/Controllers/NotificationController.php';
+            $controller = new NotificationController();
+            
+            if (!isset($segments[1])) {
+                $controller->inbox();
+                return;
+            }
+
+            if (is_numeric($segments[1]) && isset($segments[2]) && $segments[2] === 'delete') {
+                $controller->delete($segments[1]);
+                return;
+            }
+
+            if ($segments[1] === 'unread-count') {
+                $controller->getUnreadCount();
+                return;
+            }
+        }
+
         // Ruta no encontrada
         http_response_code(404);
         echo "Página no encontrada";

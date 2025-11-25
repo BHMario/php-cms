@@ -2,29 +2,34 @@
 
 require_once __DIR__ . '/../Models/Post.php';
 require_once __DIR__ . '/../Models/User.php';
+require_once __DIR__ . '/../Models/Notification.php';
+require_once __DIR__ . '/../Models/Database.php';
 
 class PostController
 {
     private $postModel;
     private $userModel;
+    private $notificationModel;
 
     public function __construct()
     {
         $this->postModel = new Post();
         $this->userModel = new User();
+        $db = new Database();
+        $this->notificationModel = new Notification($db->getConnection());
     }
 
     public function index()
     {
         // Mostrar solo los posts del usuario autenticado
         if (!isset($_SESSION['user_id'])) {
-            // Si no está autenticado, redirigimos a login
+            // Redirigir a login si no está autenticado
             header('Location: /login');
             exit;
         }
 
         $posts = $this->postModel->getByUser($_SESSION['user_id']);
-        // Añadir contadores
+        // Contenedores
         require_once __DIR__ . '/../Models/Like.php';
         require_once __DIR__ . '/../Models/Comment.php';
         $likeModel = new Like();
@@ -103,7 +108,8 @@ class PostController
         if ($title && $content) {
             $categoryId = !empty($_POST['category_id']) ? $_POST['category_id'] : null;
             $post = $this->postModel->create($title, $content, $_SESSION['user_id'], $categoryId, $imagePath);
-            // Tags (comma separated)
+            
+            // Tags (separados por comas)
             if (!empty($_POST['tags'])) {
                 require_once __DIR__ . '/../Models/Tag.php';
                 $tagModel = new Tag();
@@ -116,10 +122,37 @@ class PostController
                 }
                 $this->postModel->setTags($post->id, $ids);
             }
+            
+            // Notificar a los seguidores sobre el nuevo post
+            $this->notifyFollowers($_SESSION['user_id'], $post->id);
         }
 
         header("Location: /posts");
         exit;
+    }
+
+    // Notificar a todos los followers de un usuario cuando publica un post
+    private function notifyFollowers($userId, $postId)
+    {
+        try {
+            $db = new Database();
+            // Obtener todos los followers del usuario
+            $followers = $db->fetchAll(
+                "SELECT user_id FROM followers WHERE target_user_id = ?",
+                [$userId]
+            );
+            
+            foreach ($followers as $follower) {
+                $this->notificationModel->create(
+                    $follower['user_id'],  // quien recibe la notificación
+                    $userId,               // quien publicó
+                    'post',                // tipo de notificación
+                    $postId                // id del post
+                );
+            }
+        } catch (\Exception $e) {
+            error_log("Error notifying followers: " . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -130,7 +163,7 @@ class PostController
             exit;
         }
 
-        // Only owner or admin can edit
+        // Solo el propietario o admin puede editar
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
@@ -154,7 +187,7 @@ class PostController
             exit;
         }
 
-        // Ensure post exists and user is authorized
+        // Asegurar que el post existe y el usuario está autorizado
         $post = $this->postModel->getById($id);
         if ($post && ($post['user_id'] == $_SESSION['user_id'] || $this->userModel->getById($_SESSION['user_id'])['role'] === 'admin')) {
             // Procesar imagen (opcional)
@@ -175,13 +208,13 @@ class PostController
             }
 
             if ($title && $content) {
-                // If no new image uploaded, keep existing image
+                // Si no se sube una nueva imagen, mantener la imagen existente
                 if ($imagePath === null) {
                     $imagePath = $post['image'] ?? null;
                 }
                 $categoryId = !empty($_POST['category_id']) ? $_POST['category_id'] : null;
                 $this->postModel->update($id, $title, $content, $categoryId, $imagePath);
-                // Tags
+                // Etiquetas (separadas por comas)
                 if (isset($_POST['tags'])) {
                     require_once __DIR__ . '/../Models/Tag.php';
                     $tagModel = new Tag();
@@ -217,7 +250,7 @@ class PostController
         exit;
     }
 
-    // Handle comment submission for a post
+    // Manejar el envío de comentarios para un post
     public function comment($postId)
     {
         require_once __DIR__ . '/../Models/Comment.php';
@@ -237,7 +270,7 @@ class PostController
         exit;
     }
 
-    // Like/unlike endpoints
+    // Dar like o quitar like
     public function like($postId)
     {
         require_once __DIR__ . '/../Models/Like.php';
@@ -248,7 +281,6 @@ class PostController
             exit;
         }
 
-        // Toggle like
         if ($likeModel->userLiked($postId, $_SESSION['user_id'])) {
             $likeModel->delete($postId, $_SESSION['user_id']);
         } else {
