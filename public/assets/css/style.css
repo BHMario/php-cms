@@ -40,11 +40,41 @@ header {
 
 nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     gap: 1rem;
+    width: 100%;
+}
+
+.sidebar-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu-toggle span {
+    width: 22px;
+    height: 2px;
+    background: var(--nav-link-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu-toggle:hover span {
+    background: var(--primary-color);
+}
+
+.nav-brand {
+    flex-shrink: 0;
 }
 
 .nav-brand a {
@@ -63,6 +93,7 @@ nav {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    margin-left: auto;
 }
 
     .nav-links a {
@@ -375,6 +406,23 @@ footer {
     100% { background-position: 0% 50%; }
 }
 
+/* En modo claro, evitar que el texto brillante sea completamente blanco (no legible)
+   Se aplica un degradado más oscuro y contrastado para que siempre sea legible sobre fondo claro */
+body:not(.dark) .shiny {
+    background: linear-gradient(90deg, #1f2937 0%, #475569 20%, #0ea5a1 50%, #7c3aed 80%, #0f1724 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 2.4s ease-in-out infinite;
+    text-shadow: 0 4px 10px rgba(15,23,36,0.06);
+}
+
+/* Fallback si el navegador no soporta background-clip:text, asegurar color legible */
+body:not(.dark) .shiny {
+    -webkit-text-fill-color: unset;
+}
+
 /* Entrada de las cards */
 .card { 
     animation: fadeInUp 0.45s ease both;
@@ -510,7 +558,6 @@ footer .container { padding: 1rem 0; }
     color: var(--accent-color);
 }
 
-/* Row utilities */
 .row-between {
     display:flex;
     justify-content: space-between;
@@ -563,5 +610,157 @@ footer .container { padding: 1rem 0; }
     position: absolute;
     top: -0.5rem;
     right: -0.5rem;
+}
+
+/* Botones de categoría en formularios */
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-btn {
+    background: rgba(15, 23, 36, 0.06);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-weight: 500;
+}
+
+.category-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 6px 16px rgba(14, 165, 161, 0.2);
+}
+
+/* Barra lateral de filtros - Colapsable */
+.sidebar-filters {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 80px;
+    width: 50px;
+    background: transparent;
+    z-index: 100;
+}
+
+.sidebar-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 50px;
+    height: 50px;
+}
+
+.sidebar-toggle:hover {
+    background: var(--primary-color);
+}
+
+.sidebar-toggle span {
+    width: 24px;
+    height: 2px;
+    background: var(--text-color);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover span {
+    background: white;
+}
+
+.sidebar-content {
+    position: fixed;
+    left: -280px;
+    top: 80px;
+    width: 280px;
+    height: calc(100vh - 80px);
+    background: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    padding: 1.5rem;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 99;
+}
+
+.sidebar-content.open {
+    left: 0;
+}
+
+.sidebar-content h3 {
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.sidebar-group {
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-group h4 {
+    margin: 0 0 0.6rem 0 !important;
+    font-size: 0.8rem;
+    color: var(--muted-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.sidebar-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    font-weight: 400;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.sidebar-group label span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-group input[type="checkbox"],
+.sidebar-group input[type="radio"] {
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.sidebar-content button {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 1rem !important;
+}
+
+.posts-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
 }
 

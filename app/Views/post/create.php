@@ -21,14 +21,26 @@
             </div>
 
             <div class="form-group">
-                <label for="category">Categoría (opcional)</label>
-                <select name="category_id" id="category">
-                    <option value="">-- Sin categoría --</option>
+                <label>Categoría (opcional)</label>
+                <div class="category-buttons">
+                    <input type="hidden" name="category_id" id="category_id" value="">
                     <?php require_once __DIR__ . '/../../Models/Category.php'; $cats = (new Category())->getAll(); foreach ($cats as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                        <button type="button" class="category-btn" data-id="<?= $c['id'] ?>" onclick="selectCategory(event, <?= $c['id'] ?>)"><?= htmlspecialchars($c['name']) ?></button>
                     <?php endforeach; ?>
-                </select>
+                </div>
             </div>
+            <script>
+            function selectCategory(event, id) {
+                event.preventDefault();
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                if (document.getElementById('category_id').value === id.toString()) {
+                    document.getElementById('category_id').value = '';
+                } else {
+                    document.getElementById('category_id').value = id;
+                    event.target.classList.add('active');
+                }
+            }
+            </script>
 
             <div class="form-group">
                 <label for="tags">Etiquetas (separadas por coma)</label>

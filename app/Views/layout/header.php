@@ -11,6 +11,11 @@
 <body>
     <header>
         <nav>
+            <button class="sidebar-menu-toggle" title="Abrir/Cerrar filtros">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <div class="nav-brand">
                 <a href="/" class="brand shiny">Mi Blog</a>
             </div>

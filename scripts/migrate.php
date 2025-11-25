@@ -75,6 +75,17 @@ try {
         echo "No se pudo actualizar la columna 'type' de notifications: " . $e->getMessage() . "\n";
     }
     
+    // Insertar categorías por defecto si no existen
+    $categories = ['Desarrollo Web', 'Frontend', 'Backend', 'Bases de Datos', 'DevOps', 'Tutorial', 'Noticia', 'Opinión'];
+    foreach ($categories as $cat) {
+        $result = $pdo->query("SELECT COUNT(*) as cnt FROM categories WHERE name = '$cat'");
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row['cnt'] == 0) {
+            $pdo->exec("INSERT INTO categories (name) VALUES ('$cat')");
+        }
+    }
+    echo "Categorías insertadas/verificadas.\n";
+    
     echo "\nMigración completada exitosamente.\n";
     
 } catch (PDOException $e) {

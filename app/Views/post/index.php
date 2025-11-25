@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
 
-<div class="container">
+<div class="container page-top">
     <div class="row-between">
     <h1 class="shiny">Posts</h1>
         <?php if (isset($_SESSION['user_id'])): ?>
