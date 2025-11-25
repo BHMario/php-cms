@@ -12,7 +12,7 @@
     <header>
         <nav>
             <div class="nav-brand">
-                <a href="/" class="brand">Mi Blog</a>
+                <a href="/" class="brand shiny">Mi Blog</a>
             </div>
             <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
                 <span class="hamburger"></span>
@@ -51,8 +51,8 @@
                     <button id="dark-toggle" class="btn btn-secondary" type="button" title="Alternar modo oscuro">🌙</button>
                     <a href="/logout" class="btn btn-danger">Salir</a>
                 <?php else: ?>
-                    <a href="/login">Login</a>
-                    <a href="/register" class="btn btn-secondary">Registrar</a>
+                    <a href="/login" class="btn btn-login">Login</a>
+                    <a href="/register" class="btn btn-register">Registrar</a>
                 <?php endif; ?>
             </div>
         </nav>

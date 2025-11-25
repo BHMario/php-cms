@@ -2,7 +2,7 @@
 
 <div class="container auth-container">
     <div class="card">
-        <h1 class="text-center">Perfil público</h1>
+        <h1 class="text-center shiny">Perfil público</h1>
         <div style="display:flex; gap:1rem; align-items:center;">
             <div>
                 <?php if (!empty($other['profile_image'])): ?>

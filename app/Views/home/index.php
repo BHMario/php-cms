@@ -1,7 +1,7 @@
 <?php require __DIR__ . '/../layout/header.php'; ?>
 
 <div class="container">
-    <h1 class="text-center mt-4">Bienvenido a Mi Blog Personal</h1>
+    <h1 class="text-center mt-4 shiny">Bienvenido a Mi Blog Personal</h1>
 
     <?php if (!empty($posts)): ?>
         <section class="posts-grid mt-4">

@@ -2,7 +2,7 @@
 
 <div class="container auth-container">
     <div class="card">
-        <h1 class="text-center">Perfil de Usuario</h1>
+        <h1 class="text-center shiny">Perfil de Usuario</h1>
 
         <?php if (!empty($success)): ?>
             <p class="text-center success"><?= htmlspecialchars($success) ?></p>

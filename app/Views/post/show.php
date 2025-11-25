@@ -3,7 +3,7 @@
 <div class="container page-top">
     <?php if ($post): ?>
         <article class="card">
-            <h1><?= htmlspecialchars($post['title']) ?></h1>
+            <h1 class="shiny"><?= htmlspecialchars($post['title']) ?></h1>
             <div class="card-meta" style="display:flex; align-items:center; gap:0.6rem;">
                 <?php $authorImg = !empty($post['profile_image']) ? $post['profile_image'] : 'assets/images/default-avatar.svg'; ?>
                 <img src="/<?= htmlspecialchars($authorImg) ?>" alt="Avatar" class="avatar" style="width:44px;height:44px;" />

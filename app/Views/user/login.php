@@ -2,7 +2,7 @@
 
 <div class="container auth-container">
     <div class="card">
-        <h1 class="text-center">Iniciar Sesión</h1>
+        <h1 class="text-center shiny">Iniciar Sesión</h1>
 
         <?php if (!empty($error)): ?>
             <p class="error text-center"><?= htmlspecialchars($error) ?></p>

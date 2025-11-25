@@ -3,7 +3,7 @@
 <div class="container page-top">
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h1 style="margin: 0;">📬 Notificaciones</h1>
+            <h1 class="shiny" style="margin: 0;">📬 Notificaciones</h1>
             <?php
             $ref = 
                 isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])

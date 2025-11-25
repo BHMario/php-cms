@@ -2,7 +2,7 @@
 
 <div class="container form-container">
     <div class="card">
-        <h1 class="text-center">Editar Post</h1>
+        <h1 class="text-center shiny">Editar Post</h1>
 
         <?php if ($post): ?>
             <form action="/posts/<?= $post['id'] ?>/update" method="post" enctype="multipart/form-data">

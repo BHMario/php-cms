@@ -2,7 +2,7 @@
 
 <div class="container">
     <div class="row-between">
-        <h1>Posts</h1>
+    <h1 class="shiny">Posts</h1>
         <?php if (isset($_SESSION['user_id'])): ?>
             <a href="/posts/create" class="btn">Crear Nuevo Post</a>
         <?php endif; ?>

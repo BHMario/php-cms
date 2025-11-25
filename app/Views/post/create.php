@@ -2,7 +2,7 @@
 
 <div class="container form-container">
     <div class="card">
-        <h1 class="text-center">Crear Nuevo Post</h1>
+        <h1 class="text-center shiny">Crear Nuevo Post</h1>
 
         <form action="/posts/store" method="post" enctype="multipart/form-data">
             <div class="form-group">

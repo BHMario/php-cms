@@ -15,7 +15,7 @@
         </div>
         <div>
             <strong>Contacto</strong>
-            <p style="margin:0.25rem 0 0 0;">correo@ejemplo.com</p>
+            <p style="margin:0.25rem 0 0 0;">mariosanrui1612@gmail.com</p>
             <div style="margin-top:0.5rem; display:flex; gap:0.5rem;">
                 <a href="#" class="muted-link">Twitter</a>
                 <a href="#" class="muted-link">GitHub</a>
