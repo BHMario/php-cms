@@ -139,6 +139,15 @@ class Router
             }
         }
 
+        // Rutas de administrador
+        if ($segments[0] === 'admin') {
+            require_once __DIR__ . '/Controllers/AdminController.php';
+            $controller = new AdminController();
+            // Por ahora solo dashboard en /admin
+            $controller->index();
+            return;
+        }
+
         // Ruta no encontrada
         http_response_code(404);
         echo "Página no encontrada";

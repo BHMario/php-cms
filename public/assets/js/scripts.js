@@ -30,13 +30,26 @@
             toggle.setAttribute('aria-expanded', 'false');
         }
     });
-    // Dark mode toggle
-    const darkToggle = document.getElementById('dark-toggle');
+})();
+
+// Dark mode toggle (supports multiple toggles on the page)
+// This is OUTSIDE the above IIFE so it runs even if nav-toggle doesn't exist
+(function () {
+    const darkToggles = document.querySelectorAll('#dark-toggle');
     const body = document.body;
     const DARK_KEY = 'site-dark-mode';
 
     function applyDark(pref) {
         if (pref) body.classList.add('dark'); else body.classList.remove('dark');
+        // update all toggles state/icon
+        darkToggles.forEach(function (btn) {
+            btn.setAttribute('aria-pressed', pref ? 'true' : 'false');
+            btn.setAttribute('aria-label', pref ? 'Desactivar modo oscuro' : 'Activar modo oscuro');
+            // swap icon (use simple emoji fallback)
+            try {
+                btn.textContent = pref ? '☀️' : '🌙';
+            } catch (e) {}
+        });
     }
 
     // Init from localStorage
@@ -44,13 +57,22 @@
         const stored = localStorage.getItem(DARK_KEY);
         if (stored !== null) {
             applyDark(stored === '1');
+        } else {
+            // set initial aria attributes for toggles
+            darkToggles.forEach(function (btn) {
+                btn.setAttribute('aria-pressed', body.classList.contains('dark') ? 'true' : 'false');
+                btn.setAttribute('aria-label', body.classList.contains('dark') ? 'Desactivar modo oscuro' : 'Activar modo oscuro');
+            });
         }
     } catch (e) {}
 
-    if (darkToggle) {
-        darkToggle.addEventListener('click', function () {
-            const isDark = body.classList.toggle('dark');
-            try { localStorage.setItem(DARK_KEY, isDark ? '1' : '0'); } catch (e) {}
+    if (darkToggles && darkToggles.length) {
+        darkToggles.forEach(function (el) {
+            el.addEventListener('click', function () {
+                const isDark = body.classList.toggle('dark');
+                try { localStorage.setItem(DARK_KEY, isDark ? '1' : '0'); } catch (e) {}
+                applyDark(isDark);
+            });
         });
     }
 })();

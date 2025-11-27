@@ -26,6 +26,16 @@ body {
     flex-direction: column;
 }
 
+/* Main content expands to push footer to bottom */
+main {
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem;
+    box-sizing: border-box;
+}
+
 /* Header y Navegación */
 header {
     background: linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));
@@ -269,6 +279,42 @@ body.dark input, body.dark textarea {
     border-color: var(--input-border);
 }
 
+/* Admin header dark mode */
+body.dark .admin-header {
+    background: linear-gradient(90deg, rgba(20, 30, 48, 0.8), rgba(10, 15, 25, 0.6));
+    border-bottom-color: var(--card-border);
+}
+
+body.dark .admin-nav {
+    background: rgba(5, 10, 18, 0.5);
+}
+
+body.dark .admin-brand {
+    color: var(--text-color);
+}
+
+body.dark .admin-links a {
+    color: var(--text-color);
+}
+
+body.dark .admin-card {
+    background: linear-gradient(180deg, rgba(10, 20, 35, 0.9), rgba(15, 25, 40, 0.7));
+    border-color: var(--card-border);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .admin-card:hover {
+    box-shadow: 0 12px 28px rgba(34, 193, 195, 0.15);
+}
+
+body.dark .admin-card h3 {
+    color: var(--text-color);
+}
+
+body.dark .admin-card p {
+    color: var(--muted-color);
+}
+
 /* Botones */
 button, .btn {
     background: var(--primary-color);
@@ -428,6 +474,59 @@ body:not(.dark) .shiny {
     animation: fadeInUp 0.45s ease both;
 }
 
+/* Admin header styling */
+.admin-header {
+    background: linear-gradient(90deg, rgba(12, 74, 110, 0.03), rgba(0,0,0,0.01));
+    border-bottom: 1px solid var(--card-border);
+}
+.admin-nav {
+    display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0.6rem 1rem;
+}
+.admin-brand { font-weight:800; color:var(--nav-link-color); }
+.admin-links a { margin-left:0.6rem; text-decoration:none; }
+
+/* Admin cards grid */
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.admin-card {
+    display: block;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: linear-gradient(180deg, var(--card-bg), rgba(0,0,0,0.02));
+    box-shadow: 0 6px 18px rgba(15,23,36,0.04);
+    color: var(--text-color);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.admin-card h3 { margin:0 0 0.4rem 0; }
+.admin-card p { margin:0; color:var(--muted-color); }
+.admin-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(15,23,36,0.08); }
+
+/* Remove underline from admin card links and ensure color inheritance */
+.admin-card, .admin-card a {
+    text-decoration: none;
+    color: inherit;
+}
+.admin-card a:hover {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Admin footer dark mode */
+body.dark .admin-footer {
+    background: linear-gradient(180deg, rgba(10, 15, 25, 0.6), rgba(5, 10, 18, 0.4));
+    border-color: var(--card-border);
+    color: var(--text-color);
+}
+
+body.dark .admin-footer .container {
+    color: var(--muted-color);
+}
+
+
 /* Entrada suave de los elementos de notificación */
 .notification-item {
     animation: fadeInUp 0.28s ease both;
@@ -450,14 +549,55 @@ body:not(.dark) .shiny {
 
 #dark-toggle:hover { transform: translateY(-3px); }
 
-/* Botón de registro */
+body.dark #dark-toggle {
+    background: linear-gradient(135deg, #22c1c3 0%, #06d4d4 100%);
+    box-shadow: 0 8px 20px rgba(34, 193, 195, 0.25);
+}
+
+body.dark #dark-toggle:hover {
+    box-shadow: 0 12px 28px rgba(34, 193, 195, 0.35);
+}
+
+/* Admin buttons in dark mode */
+body.dark .admin-links .btn-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+    border: 1px solid rgba(34, 193, 195, 0.2);
+}
+
+body.dark .admin-links .btn-ghost:hover {
+    background: rgba(34, 193, 195, 0.15);
+    border-color: var(--primary-color);
+}
+
+body.dark .btn-danger {
+    background: linear-gradient(90deg, #ff6b8a 0%, #ff5a7d 100%);
+}
+
+body.dark .btn-danger:hover {
+    box-shadow: 0 12px 30px rgba(255, 107, 138, 0.3);
+}
+
+/* Secondary button dark mode */
+body.dark .btn-secondary {
+    background: rgba(34, 193, 195, 0.15);
+    color: var(--text-color);
+    border: 1px solid rgba(34, 193, 195, 0.3);
+}
+
+body.dark .btn-secondary:hover {
+    background: rgba(34, 193, 195, 0.25);
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 16px rgba(34, 193, 195, 0.2);
+}
+
 .btn-register {
     background: linear-gradient(90deg, #ef476f, #ff7a88);
     color: #fff;
     border: none;
 }
 
-/* Login button: prominent but slightly less saturated than register */
+/* Boton Login */
 .btn-login {
     background: linear-gradient(90deg, #06b6d4, #0ea5a1);
     color: #fff;
@@ -470,7 +610,6 @@ body:not(.dark) .shiny {
     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
 
-/* Make plain nav links less visually competing with buttons */
 .nav-links > a:not(.btn) {
     background: transparent;
     padding: 0.4rem 0.7rem;
@@ -483,7 +622,7 @@ footer {
     background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    margin: 2rem 1rem 0 1rem;
+    margin: 0;
     box-shadow: 0 10px 30px rgba(2,6,23,0.04);
 }
 

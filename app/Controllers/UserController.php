@@ -25,7 +25,12 @@ class UserController
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
-            header("Location: /");
+            // Si es administrador, redirigir al dashboard
+            if (isset($user['role']) && $user['role'] === 'admin') {
+                header("Location: /admin");
+            } else {
+                header("Location: /");
+            }
             exit;
         }
 
