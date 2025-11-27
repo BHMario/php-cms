@@ -175,7 +175,8 @@ nav {
 
 /* Barra de búsqueda */
 .nav-search input[type="search"] {
-    width:180px; padding:6px 8px;
+    width:180px;
+    padding:6px 8px;
     border-radius:8px;
     border:1px solid var(--input-border);
     background:var(--input-bg);
@@ -286,7 +287,7 @@ body.dark .admin-header {
 }
 
 body.dark .admin-nav {
-    background: rgba(5, 10, 18, 0.5);
+    background: transparent;
 }
 
 body.dark .admin-brand {
@@ -351,6 +352,29 @@ button:hover, .btn:hover {
     box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 
+/* Botón de retroceso para admin y otras páginas */
+.btn-back {
+    background: var(--text-color);
+    color: white;
+    border: none;
+}
+
+.btn-back:hover {
+    background: rgba(15, 23, 36, 0.8);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+body.dark .btn-back {
+    background: var(--primary-color);
+    color: white;
+}
+
+body.dark .btn-back:hover {
+    background: rgba(34, 193, 195, 0.8);
+    box-shadow: 0 8px 24px rgba(34, 193, 195, 0.2);
+}
+
 .btn-danger {
     background: var(--accent-color);
 }
@@ -363,7 +387,8 @@ button:hover, .btn:hover {
 label {
     display:block;
     margin-bottom:0.5rem;
-    font-weight:600; color:#34495e;
+    font-weight:600;
+    color: var(--text-color);
 }
 
 input[type="text"], input[type="email"], input[type="password"], textarea {
@@ -436,7 +461,6 @@ footer {
 
 /* Efecto brillante para títulos */
 .shiny {
-    /* Middle-ground shiny: noticeable but restrained */
     background: linear-gradient(90deg, #ffffff 0%, #ffecc0 20%, #ff9fb0 50%, #cdb8ff 80%, #ffffff 100%);
     background-size: 300% 100%;
     -webkit-background-clip: text;
@@ -452,8 +476,6 @@ footer {
     100% { background-position: 0% 50%; }
 }
 
-/* En modo claro, evitar que el texto brillante sea completamente blanco (no legible)
-   Se aplica un degradado más oscuro y contrastado para que siempre sea legible sobre fondo claro */
 body:not(.dark) .shiny {
     background: linear-gradient(90deg, #1f2937 0%, #475569 20%, #0ea5a1 50%, #7c3aed 80%, #0f1724 100%);
     background-size: 300% 100%;
@@ -479,11 +501,19 @@ body:not(.dark) .shiny {
     background: linear-gradient(90deg, rgba(12, 74, 110, 0.03), rgba(0,0,0,0.01));
     border-bottom: 1px solid var(--card-border);
 }
+
 .admin-nav {
     display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0.6rem 1rem;
+    background: transparent;
 }
-.admin-brand { font-weight:800; color:var(--nav-link-color); }
-.admin-links a { margin-left:0.6rem; text-decoration:none; }
+
+.admin-brand {
+    font-weight:800; color:var(--nav-link-color);
+}
+
+.admin-links a {
+    margin-left:0.6rem; text-decoration:none;
+}
 
 /* Admin cards grid */
 .admin-cards {
@@ -491,6 +521,7 @@ body:not(.dark) .shiny {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
 }
+
 .admin-card {
     display: block;
     padding: 1.25rem;
@@ -501,9 +532,20 @@ body:not(.dark) .shiny {
     color: var(--text-color);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.admin-card h3 { margin:0 0 0.4rem 0; }
-.admin-card p { margin:0; color:var(--muted-color); }
-.admin-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(15,23,36,0.08); }
+
+.admin-card h3 {
+    margin:0 0 0.4rem 0;
+}
+
+.admin-card p {
+    margin:0;
+    color:var(--muted-color);
+}
+
+.admin-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(15,23,36,0.08);
+}
 
 /* Remove underline from admin card links and ensure color inheritance */
 .admin-card, .admin-card a {
@@ -545,9 +587,12 @@ body.dark .admin-footer .container {
     color: #fff;
     box-shadow: 0 8px 20px rgba(6,182,212,0.12);
     border: none;
+    margin-left: 1rem;
 }
 
-#dark-toggle:hover { transform: translateY(-3px); }
+#dark-toggle:hover {
+    transform: translateY(-3px);
+}
 
 body.dark #dark-toggle {
     background: linear-gradient(135deg, #22c1c3 0%, #06d4d4 100%);

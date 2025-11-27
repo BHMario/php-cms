@@ -4,9 +4,13 @@ require_once __DIR__ . '/../Models/User.php';
 
 class AdminController
 {
-    public function index()
+    public function __construct()
     {
-        // Acceso restringido a administradores
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Acceso restringido a administradores en todas las subclases
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit;
@@ -19,7 +23,10 @@ class AdminController
             echo 'Acceso denegado';
             exit;
         }
+    }
 
+    public function index()
+    {
         // Cargar datos básicos para el dashboard (puede ampliarse)
         require __DIR__ . '/../Views/admin/dashboard.php';
     }

@@ -4,6 +4,17 @@ class HomeController
 {
     public function index()
     {
+        // Si es administrador, redirigir al dashboard
+        if (isset($_SESSION['user_id'])) {
+            require_once __DIR__ . '/../Models/User.php';
+            $userModel = new User();
+            $user = $userModel->getById($_SESSION['user_id']);
+            if ($user && isset($user['role']) && $user['role'] === 'admin') {
+                header("Location: /admin");
+                exit;
+            }
+        }
+        
         // Mostrar todos los posts en la página principal
         require_once __DIR__ . '/../Models/Post.php';
         $postModel = new Post();
