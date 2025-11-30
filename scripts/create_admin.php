@@ -1,9 +1,9 @@
 
 <?php
-// Script para crear un usuario admin si no existe.
+// Crear usuario admin
 require_once __DIR__ . '/../app/Models/User.php';
 
-// Permite crear admin por defecto o personalizado
+// Admin por defecto o personalizado
 if (PHP_SAPI === 'cli' && $argc >= 3) {
     $username = $argv[1];
     $password = $argv[2];

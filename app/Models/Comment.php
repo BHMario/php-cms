@@ -18,7 +18,7 @@ class Comment
             [$post_id, $user_id, $content]
         );
         
-        // Crear notificación de comentario para el autor del post (si no es el mismo usuario)
+        // Notificar al autor del post
         try {
             $post = $this->db->fetch("SELECT user_id FROM posts WHERE id = ?", [$post_id]);
             if ($post && isset($post['user_id']) && $post['user_id'] != $user_id) {

@@ -36,7 +36,7 @@ main {
     box-sizing: border-box;
 }
 
-/* Lightbox para imagen de post */
+/* Lightbox imagen */
 #image-lightbox {
     display: none;
     position: fixed;
@@ -441,7 +441,7 @@ input:focus, textarea:focus {
     box-shadow:0 6px 18px rgba(34,193,195,0.08);
 }
 
-/* Grid Layout para Posts */
+/* Grid posts */
 .posts-grid {
     display:grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1014,7 +1014,7 @@ footer .container { padding: 1rem 0; }
     gap: 2rem;
 }
 
-/* Modal para confirmación de logout */
+/* Modal logout */
 .modal {
     display: none !important;
     position: fixed;

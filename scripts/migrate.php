@@ -1,7 +1,6 @@
 <?php
 /**
- * Crear nuevas tablas y columas.
- * Run: php migrate.php
+ * Crear tablas y columnas
  */
 
 $config = require __DIR__ . '/../config/config.php';
@@ -12,16 +11,16 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
     
-    echo "Conectado a la base de datos.\n";
+    echo "Conectado a BD.\n";
     
-    // Crear tabla tags
+    // Tabla tags
     $pdo->exec("CREATE TABLE IF NOT EXISTS tags (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL UNIQUE
     )");
-    echo "Tabla 'tags' creada/verificada.\n";
+    echo "Tabla 'tags' OK.\n";
     
-    // Crear tabla post_tags
+    // Tabla post_tags
     $pdo->exec("CREATE TABLE IF NOT EXISTS post_tags (
         post_id INT NOT NULL,
         tag_id INT NOT NULL,

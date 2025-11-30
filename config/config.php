@@ -1,5 +1,5 @@
 <?php
-// Configuración de conexión a la base de datos
+// Configuración BD
 
 return [
     'host' => 'localhost',

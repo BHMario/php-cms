@@ -250,7 +250,7 @@ class PostController
         exit;
     }
 
-    // Manejar el envío de comentarios para un post
+    // Enviar comentario
     public function comment($postId)
     {
         require_once __DIR__ . '/../Models/Comment.php';
@@ -270,7 +270,7 @@ class PostController
         exit;
     }
 
-    // Dar like o quitar like
+    // Dar/quitar like
     public function like($postId)
     {
         require_once __DIR__ . '/../Models/Like.php';

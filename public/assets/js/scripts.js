@@ -1,4 +1,4 @@
-// Simple mobile menu toggle and small UI helpers
+// Toggle men\u00fa m\u00f3vil
 (function () {
     const toggle = document.querySelector('.nav-toggle');
     const nav = document.getElementById('nav-links');
@@ -11,7 +11,7 @@
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
 
-    // Close menu when clicking a link
+    // Cerrar men\u00fa al hacer clic
     nav.addEventListener('click', function (e) {
         if (e.target.tagName.toLowerCase() === 'a') {
             nav.classList.remove('open');
@@ -20,7 +20,7 @@
         }
     });
 
-    // Close when clicking outside on small screens
+    // Cerrar al hacer clic fuera
     document.addEventListener('click', function (e) {
         if (!nav.classList.contains('open')) return;
         const isInside = nav.contains(e.target) || toggle.contains(e.target);
@@ -32,8 +32,7 @@
     });
 })();
 
-// Dark mode toggle (supports multiple toggles on the page)
-// This is OUTSIDE the above IIFE so it runs even if nav-toggle doesn't exist
+// Alternar modo oscuro
 (function () {
     const darkToggles = document.querySelectorAll('#dark-toggle');
     const body = document.body;
@@ -41,24 +40,24 @@
 
     function applyDark(pref) {
         if (pref) body.classList.add('dark'); else body.classList.remove('dark');
-        // update all toggles state/icon
+        // Actualizar estado
         darkToggles.forEach(function (btn) {
             btn.setAttribute('aria-pressed', pref ? 'true' : 'false');
             btn.setAttribute('aria-label', pref ? 'Desactivar modo oscuro' : 'Activar modo oscuro');
-            // swap icon (use simple emoji fallback)
+            // Cambiar icono
             try {
                 btn.textContent = pref ? '☀️' : '🌙';
             } catch (e) {}
         });
     }
 
-    // Init from localStorage
+    // Cargar desde localStorage
     try {
         const stored = localStorage.getItem(DARK_KEY);
         if (stored !== null) {
             applyDark(stored === '1');
         } else {
-            // set initial aria attributes for toggles
+            // Iniciar atributos aria
             darkToggles.forEach(function (btn) {
                 btn.setAttribute('aria-pressed', body.classList.contains('dark') ? 'true' : 'false');
                 btn.setAttribute('aria-label', body.classList.contains('dark') ? 'Desactivar modo oscuro' : 'Activar modo oscuro');
@@ -77,7 +76,7 @@
     }
 })();
 
-// Lightbox para imagen de post
+// Lightbox imagen
 (function () {
     const postImg = document.querySelector('.post-image-full');
     const lightbox = document.getElementById('image-lightbox');
@@ -110,7 +109,7 @@
     }
 })();
 
-// Logout modal confirmation
+// Modal logout
 (function () {
     const logoutBtn = document.getElementById('logout-btn');
     const logoutCancel = document.getElementById('logout-cancel');
@@ -119,14 +118,14 @@
 
     if (!logoutBtn || !logoutModal) return;
 
-    // Show modal on logout button click
+    // Mostrar modal
     logoutBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         logoutModal.classList.add('active');
     });
 
-    // Hide modal on cancel button click
+    // Cancelar
     if (logoutCancel) {
         logoutCancel.addEventListener('click', function (e) {
             e.preventDefault();
@@ -135,14 +134,14 @@
         });
     }
 
-    // Hide modal on logout confirm click
+    // Confirmar logout
     if (logoutLink) {
         logoutLink.addEventListener('click', function (e) {
             logoutModal.classList.remove('active');
         });
     }
 
-    // Close modal when clicking on the backdrop (outside modal-content)
+    // Cerrar al hacer clic fuera
     logoutModal.addEventListener('click', function (e) {
         if (e.target === logoutModal) {
             e.stopPropagation();
@@ -150,7 +149,7 @@
         }
     });
 
-    // Prevent close when clicking inside modal-content
+    // No cerrar al hacer clic dentro
     const modalContent = logoutModal.querySelector('.modal-content');
     if (modalContent) {
         modalContent.addEventListener('click', function (e) {
@@ -159,7 +158,7 @@
     }
 })();
 
-// Password change modal (only on profile page)
+// Modal cambio contraseña
 (function () {
     const changePasswordBtn = document.getElementById('change-password-btn');
     const passwordCancel = document.getElementById('password-cancel');
@@ -177,7 +176,7 @@
         passwordCancel.addEventListener('click', function (e) {
             e.preventDefault();
             passwordModal.style.display = 'none';
-            // Limpiar el formulario
+            // Limpiar formulario
             if (passwordForm) {
                 passwordForm.reset();
                 document.getElementById('current-pwd-error').style.display = 'none';
@@ -188,11 +187,11 @@
         });
     }
 
-    // Close modal when clicking outside (on the backdrop)
+    // Cerrar al hacer clic fuera (backdrop)
     passwordModal.addEventListener('click', function (e) {
         if (e.target === passwordModal) {
             passwordModal.style.display = 'none';
-            // Limpiar el formulario
+            // Limpiar formulario
             if (passwordForm) {
                 passwordForm.reset();
                 document.getElementById('current-pwd-error').style.display = 'none';
@@ -203,7 +202,7 @@
         }
     });
 
-    // Manejar envío del formulario
+    // Enviar formulario
     if (passwordForm) {
         passwordForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -212,13 +211,13 @@
             const newPassword = document.getElementById('new_password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
 
-            // Limpiar errores previos
+            // Limpiar errores
             document.getElementById('current-pwd-error').style.display = 'none';
             document.getElementById('new-pwd-error').style.display = 'none';
             document.getElementById('confirm-pwd-error').style.display = 'none';
             document.getElementById('password-success').style.display = 'none';
 
-            // Enviar datos al servidor
+            // Enviar datos
             const formData = new FormData(passwordForm);
 
             fetch('/change-password', {
@@ -233,20 +232,20 @@
                     return data;
                 })
                 .then(data => {
-                    // Éxito
+                    // Ok
                     const successEl = document.getElementById('password-success');
                     successEl.textContent = data.success || 'Contraseña actualizada correctamente';
                     successEl.style.display = 'block';
                     passwordForm.reset();
 
-                    // Cerrar modal después de 2 segundos
+                    // Cerrar en 2s
                     setTimeout(() => {
                         passwordModal.style.display = 'none';
                         successEl.style.display = 'none';
                     }, 2000);
                 })
                 .catch(error => {
-                    // Mostrar error específico
+                    // Error
                     const errorMsg = error.error || 'Error desconocido';
 
                     if (errorMsg.includes('contraseña actual')) {

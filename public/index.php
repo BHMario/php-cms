@@ -1,5 +1,5 @@
 <?php
-// Iniciar sesiones (necesario para login/registro y autorización)
+// Iniciar sesión
 if (session_status() === PHP_SESSION_NONE) {
 	session_start();
 }
