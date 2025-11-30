@@ -186,7 +186,7 @@ class Router
                     if (isset($segments[3]) && $segments[3] === 'edit') { $controller->edit($id); return; }
                     if (isset($segments[3]) && $segments[3] === 'update') { $controller->update($id); return; }
                     if (isset($segments[3]) && $segments[3] === 'delete') { $controller->delete($id); return; }
-                    $controller->show($id);
+                    $controller->index();
                     return;
                 }
             }
@@ -203,7 +203,7 @@ class Router
                     if (isset($segments[3]) && $segments[3] === 'edit') { $controller->edit($id); return; }
                     if (isset($segments[3]) && $segments[3] === 'update') { $controller->update($id); return; }
                     if (isset($segments[3]) && $segments[3] === 'delete') { $controller->delete($id); return; }
-                    $controller->show($id);
+                    $controller->index();
                     return;
                 }
             }
