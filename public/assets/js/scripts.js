@@ -1,4 +1,4 @@
-// Toggle men\u00fa m\u00f3vil
+// Toggle menú móvil
 (function () {
     const toggle = document.querySelector('.nav-toggle');
     const nav = document.getElementById('nav-links');
@@ -11,7 +11,7 @@
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
 
-    // Cerrar men\u00fa al hacer clic
+    // Cerrar menú al hacer clic
     nav.addEventListener('click', function (e) {
         if (e.target.tagName.toLowerCase() === 'a') {
             nav.classList.remove('open');
