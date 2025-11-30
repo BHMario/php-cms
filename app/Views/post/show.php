@@ -3,7 +3,10 @@
 <div class="container page-top">
     <?php if ($post): ?>
         <article class="card">
-            <h1 class="shiny"><?= htmlspecialchars($post['title']) ?></h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h1 class="shiny" style="margin:0;"><?= htmlspecialchars($post['title']) ?></h1>
+                <a href="/posts" class="btn" onclick="history.back(); return false;">&larr; Volver</a>
+            </div>
             <div class="card-meta" style="display:flex; align-items:center; gap:0.6rem;">
                 <?php $authorImg = !empty($post['profile_image']) ? $post['profile_image'] : 'assets/images/default-avatar.svg'; ?>
                 <img src="/<?= htmlspecialchars($authorImg) ?>" alt="Avatar" class="avatar" style="width:44px;height:44px;" />
@@ -81,13 +84,11 @@
             <?php endif; ?>
         </section>
 
-        <div class="mt-4">
-            <a href="/posts" class="back-link">&larr; Volver a Posts</a>
-        </div>
+        
     <?php else: ?>
         <div class="card text-center">
             <p>Post no encontrado.</p>
-            <a href="/posts" class="btn">Volver a Posts</a>
+            <a href="/posts" class="btn" onclick="history.back(); return false;">&larr; Volver a Posts</a>
         </div>
     <?php endif; ?>
 </div>

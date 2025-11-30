@@ -3,7 +3,7 @@
 <div class="container page-top">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <h1 style="margin: 0;">Usuarios</h1>
-        <a href="/admin" class="btn btn-back">&larr; Volver</a>
+        <a href="/admin" class="btn" onclick="history.back(); return false;">&larr; Volver</a>
     </div>
     <a href="/admin/users/create" class="btn">Crear usuario</a>
     <div class="mt-4">

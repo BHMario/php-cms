@@ -3,7 +3,7 @@
 <div class="container page-top">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <h1 style="margin: 0;">Posts</h1>
-        <a href="/admin" class="btn btn-back">&larr; Volver</a>
+        <a href="/admin" class="btn" onclick="history.back(); return false;">&larr; Volver</a>
     </div>
     <a href="/admin/posts/create" class="btn">Crear nuevo post</a>
     <div class="mt-4">

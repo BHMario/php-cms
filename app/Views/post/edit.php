@@ -2,7 +2,10 @@
 
 <div class="container form-container">
     <div class="card">
-        <h1 class="text-center shiny">Editar Post</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1 class="text-center shiny" style="margin:0;">Editar Post</h1>
+            <a href="/posts" class="btn" onclick="history.back(); return false;">&larr; Volver</a>
+        </div>
 
         <?php if ($post): ?>
             <form action="/posts/<?= $post['id'] ?>/update" method="post" enctype="multipart/form-data">
@@ -48,13 +51,12 @@
                 </div>
 
                 <div class="row-between">
-                    <a href="/posts/<?= $post['id'] ?>" class="muted-link">Cancelar</a>
                     <button type="submit" class="btn">Actualizar Post</button>
                 </div>
             </form>
         <?php else: ?>
             <p>Post no encontrado.</p>
-            <a href="/posts" class="btn">Volver a Posts</a>
+            <a href="/posts" class="btn" onclick="history.back(); return false;">&larr; Volver a Posts</a>
         <?php endif; ?>
     </div>
 </div>
