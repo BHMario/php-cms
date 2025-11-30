@@ -54,7 +54,7 @@
                         <span>Perfil</span>
                     </a>
                     <button id="dark-toggle" class="btn btn-secondary" type="button" title="Alternar modo oscuro">🌙</button>
-                    <a href="/logout" class="btn btn-danger">Salir</a>
+                    <button id="logout-btn" class="btn btn-danger" type="button">Salir</button>
                 <?php else: ?>
                     <a href="/login" class="btn btn-login">Login</a>
                     <a href="/register" class="btn btn-register">Registrar</a>

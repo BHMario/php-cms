@@ -111,8 +111,12 @@ class UserController
             // Cambiar contraseña (opcional)
             if (!empty($_POST['new_password'])) {
                 $new = trim($_POST['new_password']);
+                $confirm = trim($_POST['confirm_password'] ?? '');
+                
                 if (strlen($new) < 6) {
                     $error = 'La contraseña debe tener al menos 6 caracteres.';
+                } elseif ($new !== $confirm) {
+                    $error = 'Las contraseñas no coinciden.';
                 } else {
                     $this->userModel->updatePasswordById($_SESSION['user_id'], $new);
                     $success = ($success ? $success . ' ' : '') . 'Contraseña actualizada.';
@@ -121,6 +125,68 @@ class UserController
         }
 
         require __DIR__ . '/../Views/user/profile.php';
+    }
+
+    public function changePassword()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'No autenticado']);
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['error' => 'Método no permitido']);
+            exit;
+        }
+
+        $currentPassword = trim($_POST['current_password'] ?? '');
+        $newPassword = trim($_POST['new_password'] ?? '');
+        $confirmPassword = trim($_POST['confirm_password'] ?? '');
+
+        // Validaciones
+        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Todos los campos son requeridos']);
+            exit;
+        }
+
+        // Obtener usuario actual
+        $user = $this->userModel->getById($_SESSION['user_id']);
+        if (!$user) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Usuario no encontrado']);
+            exit;
+        }
+
+        // Verificar contraseña actual
+        if (!password_verify($currentPassword, $user['password'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'La contraseña actual es incorrecta']);
+            exit;
+        }
+
+        // Validar longitud
+        if (strlen($newPassword) < 6) {
+            http_response_code(400);
+            echo json_encode(['error' => 'La contraseña debe tener al menos 6 caracteres']);
+            exit;
+        }
+
+        // Validar coincidencia
+        if ($newPassword !== $confirmPassword) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Las contraseñas no coinciden']);
+            exit;
+        }
+
+        // Actualizar contraseña
+        $this->userModel->updatePasswordById($_SESSION['user_id'], $newPassword);
+
+        http_response_code(200);
+        echo json_encode(['success' => 'Contraseña actualizada correctamente']);
+        exit;
     }
 
     // View another user's public profile by id

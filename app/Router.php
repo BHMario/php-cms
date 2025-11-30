@@ -92,6 +92,13 @@ class Router
             return;
         }
 
+        if ($segments[0] === 'change-password') {
+            require_once __DIR__ . '/Controllers/UserController.php';
+            $controller = new UserController();
+            $controller->changePassword();
+            return;
+        }
+
         // Public user profiles and follow endpoints
         if ($segments[0] === 'users') {
             require_once __DIR__ . '/Controllers/UserController.php';

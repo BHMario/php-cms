@@ -16,7 +16,7 @@
                 <a href="/admin/categories" class="btn btn-ghost">Categorías</a>
                 <a href="/admin/users" class="btn btn-ghost">Usuarios</a>
                 <button id="dark-toggle" class="btn btn-secondary" type="button" title="Alternar modo oscuro">🌙</button>
-                <a href="/logout" class="btn btn-danger">Salir</a>
+                <button id="logout-btn" class="btn btn-danger" type="button">Salir</button>
             </div>
         </nav>
     </header>
