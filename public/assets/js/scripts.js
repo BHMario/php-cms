@@ -115,27 +115,48 @@
     const logoutBtn = document.getElementById('logout-btn');
     const logoutCancel = document.getElementById('logout-cancel');
     const logoutModal = document.getElementById('logout-modal');
+    const logoutLink = logoutModal ? logoutModal.querySelector('a[href="/logout"]') : null;
 
     if (!logoutBtn || !logoutModal) return;
 
+    // Show modal on logout button click
     logoutBtn.addEventListener('click', function (e) {
         e.preventDefault();
-        logoutModal.style.display = 'flex';
+        e.stopPropagation();
+        logoutModal.classList.add('active');
     });
 
+    // Hide modal on cancel button click
     if (logoutCancel) {
         logoutCancel.addEventListener('click', function (e) {
             e.preventDefault();
-            logoutModal.style.display = 'none';
+            e.stopPropagation();
+            logoutModal.classList.remove('active');
         });
     }
 
-    // Close modal when clicking outside (on the backdrop)
+    // Hide modal on logout confirm click
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function (e) {
+            logoutModal.classList.remove('active');
+        });
+    }
+
+    // Close modal when clicking on the backdrop (outside modal-content)
     logoutModal.addEventListener('click', function (e) {
         if (e.target === logoutModal) {
-            logoutModal.style.display = 'none';
+            e.stopPropagation();
+            logoutModal.classList.remove('active');
         }
     });
+
+    // Prevent close when clicking inside modal-content
+    const modalContent = logoutModal.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    }
 })();
 
 // Password change modal (only on profile page)

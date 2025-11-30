@@ -16,11 +16,20 @@
         </div>
         <div class="form-group">
             <label>Rol</label>
-            <select name="role">
-                <option value="user" <?php echo ($u['role'] === 'user') ? 'selected' : ''; ?>>Usuario</option>
-                <option value="admin" <?php echo ($u['role'] === 'admin') ? 'selected' : ''; ?>>Administrador</option>
-            </select>
+            <div class="role-buttons">
+                <input type="hidden" name="role" id="role_id" value="<?php echo htmlspecialchars($u['role']); ?>">
+                <button type="button" class="role-btn <?= ($u['role'] ?? '') === 'user' ? 'active' : '' ?>" data-role="user" onclick="selectRole(event, 'user')">Usuario</button>
+                <button type="button" class="role-btn <?= ($u['role'] ?? '') === 'admin' ? 'active' : '' ?>" data-role="admin" onclick="selectRole(event, 'admin')">Administrador</button>
+            </div>
         </div>
+        <script>
+        function selectRole(event, role) {
+            event.preventDefault();
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('role_id').value = role;
+            event.target.classList.add('active');
+        }
+        </script>
         <button class="btn" type="submit">Actualizar</button>
     </form>
 </div>

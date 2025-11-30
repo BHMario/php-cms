@@ -16,11 +16,20 @@
         </div>
         <div class="form-group">
             <label>Rol</label>
-            <select name="role">
-                <option value="user">Usuario</option>
-                <option value="admin">Administrador</option>
-            </select>
+            <div class="role-buttons">
+                <input type="hidden" name="role" id="role_id" value="user">
+                <button type="button" class="role-btn active" data-role="user" onclick="selectRole(event, 'user')">Usuario</button>
+                <button type="button" class="role-btn" data-role="admin" onclick="selectRole(event, 'admin')">Administrador</button>
+            </div>
         </div>
+        <script>
+        function selectRole(event, role) {
+            event.preventDefault();
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('role_id').value = role;
+            event.target.classList.add('active');
+        }
+        </script>
         <button class="btn" type="submit">Crear</button>
     </form>
 </div>
