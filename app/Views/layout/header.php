@@ -26,7 +26,9 @@
                 <a href="/">Inicio</a>
                 <a href="/posts">Mis posts</a>
                 <form action="/" method="get" class="nav-search" style="display:inline-block; margin-left:0.5rem;">
-                    <input type="search" name="q" placeholder="Buscar posts..." aria-label="Buscar" />
+                    <div class="search-wrapper shine">
+                        <input type="search" name="q" placeholder="Buscar posts..." aria-label="Buscar" />
+                    </div>
                 </form>
 
                 <?php if (isset($_SESSION['user_id'])): ?>

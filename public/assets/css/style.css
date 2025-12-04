@@ -10,6 +10,10 @@
     --input-border: rgba(15,23,36,0.06);
     --card-border: rgba(15,23,36,0.06);
     --nav-link-color: #0f1724;
+    --neon-1: #0052a3;
+    --neon-2: #0052a3;
+    --neon-animation-duration: 3s;
+    --neon-perimeter-duration: 10s;
 }
 
 * {
@@ -26,7 +30,7 @@ body {
     flex-direction: column;
 }
 
-/* Main content expands to push footer to bottom */
+/* Contenido principal se expande para mantener el footer abajo */
 main {
     flex: 1 0 auto;
     width: 100%;
@@ -68,7 +72,11 @@ main {
     border: none;
 }
 @media (max-width: 600px) {
-    #lightbox-close { top: 10px; right: 10px; font-size: 28px; }
+    #lightbox-close {
+        top: 10px;
+        right: 10px;
+        font-size: 28px;
+    }
 }
 
 /* Header y Navegación */
@@ -156,7 +164,9 @@ nav {
 }
 
 /* Barra de búsqueda */
-.nav-search input[type="search"] { width:180px; }
+.nav-search input[type="search"] {
+    width:180px;
+}
 
 /* Menú móvil */
 .nav-toggle {
@@ -208,18 +218,102 @@ nav {
     top: 0;
 }
 
-/* Barra de búsqueda */
-.nav-search input[type="search"] {
-    width:180px;
-    padding:6px 8px;
-    border-radius:8px;
-    border:1px solid var(--input-border);
-    background:var(--input-bg);
-    color:var(--text-color);
+/* Barra de búsqueda con neon que rota alrededor */
+.nav-search .search-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 2px;
+    height: 36px;
+    overflow: hidden;
 }
 
-.nav-search input[type="search"]::placeholder {
+/* Efecto brillante barra de busqueda */
+.nav-search .search-wrapper.shine::before,
+.nav-search .search-wrapper.shine::after {
+    content: "";
+    position: absolute;
+    width: calc(100% + 80px);
+    aspect-ratio: 2 / 1;
+    top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(100% 100% at right, rgba(255,255,255,1) 0%, var(--neon-1) 8%, var(--neon-2) 35%, transparent 80%);
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(8px);
+    opacity: 0.7;
+    transition: width .6s ease, opacity .2s ease;
+    offset-path: border-box;
+    -webkit-offset-path: border-box;
+    offset-anchor: 100% 50%;
+    -webkit-offset-anchor: 100% 50%;
+    offset-distance: 0%;
+    -webkit-offset-distance: 0%;
+    animation: trail var(--neon-perimeter-duration) linear infinite;
+}
+
+/* Desalinea las capas: ::before avanza, ::after está 180° detrás (lado opuesto) */
+.nav-search .search-wrapper.shine::before {
+    opacity: 0.75;
+    animation-duration: var(--neon-perimeter-duration);
+    animation-delay: 0s;
+}
+.nav-search .search-wrapper.shine::after {
+    opacity: 0.55;
+    animation-duration: var(--neon-perimeter-duration);
+    /* Desfase de media duración para que esté en el lado opuesto */
+    animation-delay: calc(var(--neon-perimeter-duration) / -2);
+}
+
+@keyframes trail {
+    0% { offset-distance: 0%; -webkit-offset-distance: 0%; }
+    100% { offset-distance: 100%; -webkit-offset-distance: 100%; }
+}
+
+/* Fondo del borde */
+.nav-search .search-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
+    z-index: 0;
+    filter: blur(6px) saturate(110%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Inner mask para que solo se vea el borde (dejamos el centro con el fondo del input) */
+.nav-search .search-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 3px; /* reducir el inset para mostrar más del borde iluminado */
+    border-radius: calc(10px - 3px);
+    background: var(--input-bg);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.nav-search .search-wrapper input[type="search"] {
+    position: relative;
+    z-index: 3;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    padding: 6px 10px;
+    width: 220px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.nav-search .search-wrapper input[type="search"]::placeholder {
     color: var(--muted-color);
+}
+
+.nav-search .search-wrapper:focus-within::before {
+    filter: blur(8px) saturate(140%);
+    transform: scale(1.01);
 }
 
 .card {
@@ -303,6 +397,8 @@ body.dark {
     --input-border: rgba(255,255,255,0.04);
     --card-border: rgba(255,255,255,0.03);
     --nav-link-color: #e6edf3;
+    --neon-1: #0077dd;
+    --neon-2: #0077dd;
 }
 body.dark header {
     background: rgba(12,17,23,0.7);
