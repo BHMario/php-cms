@@ -13,7 +13,8 @@ class Post extends BaseModel
     private ?int $category_id = null;
 
     // Crear nuevo post
-    public function create(string $title, string $content, int $user_id, ?int $category_id = null, ?string $image = null): self
+    // Devuelve la fila creada como array para mantener compatibilidad con vistas/controlladores antiguos
+    public function create(string $title, string $content, int $user_id, ?int $category_id = null, ?string $image = null): array
     {
         $this->validateNotEmpty($title, 'title');
         $this->validateNotEmpty($content, 'content');
@@ -32,7 +33,9 @@ class Post extends BaseModel
         $this->user_id = $user_id;
         $this->category_id = $category_id;
         $this->image = $image;
-        return $this;
+
+        // Devolver la fila recién creada como array para compatibilidad con código que espera arrays
+        return $this->getById($this->id) ?? [];
     }
 
     // Attach tags to a post (expects array of tag ids)

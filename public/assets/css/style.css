@@ -1232,3 +1232,92 @@ body.dark .modal-content {
     color: var(--text-color);
 }
 
+/* Compatibilidad: estilos para formularios y páginas de autenticación/creación de posts */
+.auth-container, .form-container {
+    max-width: 760px;
+    margin: 1.6rem auto;
+    padding: 0 1rem;
+}
+
+.form-container .card, .auth-container .card {
+    padding: 1.4rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.btn-block {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Notificaciones */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.notification-avatar img, .notification-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.notification-text {
+    flex: 1 1 auto;
+}
+
+.notification-time {
+    color: var(--muted-color);
+    font-size: 0.85rem;
+}
+
+.notification-delete {
+    color: var(--muted-color);
+    text-decoration: none;
+    padding: 0.2rem 0.45rem;
+    border-radius: 6px;
+}
+
+/* Small helpers */
+.profile-link { text-decoration: none; color: inherit; }
+.header-avatar { border-radius: 8px; }
+
+/* Ensure category buttons area consistent */
+.category-buttons { display:flex; gap:0.5rem; flex-wrap:wrap; }
+
+

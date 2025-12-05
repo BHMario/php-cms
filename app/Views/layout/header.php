@@ -9,6 +9,38 @@
 </head>
 
 <body>
+    <?php
+    // Compatibilidad: normalizar objetos de modelo a arrays para vistas
+    // Esto arregla visuales rotos cuando controladores devuelven objetos tras el refactor POO
+    if (!function_exists('__normalize_view_var')) {
+        function __normalize_view_var(&$val) {
+            if (is_object($val)) {
+                if (method_exists($val, 'toArray')) {
+                    $val = $val->toArray();
+                    return;
+                }
+                $val = (array)$val;
+            }
+            if (is_array($val)) {
+                foreach ($val as $k => &$v) {
+                    if (is_object($v)) {
+                        if (method_exists($v, 'toArray')) {
+                            $v = $v->toArray();
+                        } else {
+                            $v = (array)$v;
+                        }
+                    }
+                }
+                unset($v);
+            }
+        }
+    }
+
+    // Normalizar variables comunes si existen
+    foreach (['post','posts','user','currentUser','other','u','p','notif','notifications'] as $n) {
+        if (isset($$n)) __normalize_view_var($$n);
+    }
+    ?>
     <header>
         <nav>
             <button class="sidebar-menu-toggle" title="Abrir/Cerrar filtros">
