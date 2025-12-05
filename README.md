@@ -111,26 +111,6 @@ La lista completa de rutas está en este repositorio y el enrutador principal (`
 
 ---
 
-## Estructura (resumen)
-
-```
-php-cms/
-├─ app/
-│  ├─ Controllers/  (Lógica de negocio)
-│  ├─ Models/       (BaseModel, acceso a BD con PDO)
-│  ├─ Services/     (Inyección de dependencias)
-│  ├─ Interfaces/   (Uploadable, etc.)
-│  ├─ Views/        (Vistas HTML/PHP)
-│  └─ Router.php    (Enrutamiento con slugs)
-├─ config/         (Configuración BD)
-├─ database/       (init.php + esquema blog.sql)
-├─ public/         (Punto de entrada + assets)
-├─ setup.php       (Inicializador BD)
-└─ Documentación   (6 archivos .md)
-```
-
----
-
 ## 🎓 Estado del Proyecto (Rúbrica)
 
 **Puntuación Actual: 9.5/10** ⭐
