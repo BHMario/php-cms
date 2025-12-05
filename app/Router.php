@@ -36,28 +36,59 @@ class Router
                 return;
             }
 
-            if (is_numeric($segments[1])) {
+            // Manejo de /posts/{id-o-slug}[/action]
+            // Puede ser /posts/123 (ID numérico) o /posts/mi-primer-post (slug)
+            $postIdentifier = $segments[1];
+            
+            if (is_numeric($postIdentifier)) {
+                // ID numérico (backward compatibility)
+                $id = (int)$postIdentifier;
                 if (isset($segments[2]) && $segments[2] === 'edit') {
-                    $controller->edit($segments[1]);
+                    $controller->edit($id);
                     return;
                 }
                 if (isset($segments[2]) && $segments[2] === 'update') {
-                    $controller->update($segments[1]);
+                    $controller->update($id);
                     return;
                 }
                 if (isset($segments[2]) && $segments[2] === 'delete') {
-                    $controller->delete($segments[1]);
+                    $controller->delete($id);
                     return;
                 }
                 if (isset($segments[2]) && $segments[2] === 'comment') {
-                    $controller->comment($segments[1]);
+                    $controller->comment($id);
                     return;
                 }
                 if (isset($segments[2]) && $segments[2] === 'like') {
-                    $controller->like($segments[1]);
+                    $controller->like($id);
                     return;
                 }
-                $controller->show($segments[1]);
+                $controller->show($id);
+                return;
+            } else {
+                // Slug (SEO-friendly): /posts/mi-primer-post[/action]
+                $slug = $postIdentifier;
+                if (isset($segments[2]) && $segments[2] === 'edit') {
+                    $controller->editBySlug($slug);
+                    return;
+                }
+                if (isset($segments[2]) && $segments[2] === 'update') {
+                    $controller->updateBySlug($slug);
+                    return;
+                }
+                if (isset($segments[2]) && $segments[2] === 'delete') {
+                    $controller->deleteBySlug($slug);
+                    return;
+                }
+                if (isset($segments[2]) && $segments[2] === 'comment') {
+                    $controller->commentBySlug($slug);
+                    return;
+                }
+                if (isset($segments[2]) && $segments[2] === 'like') {
+                    $controller->likeBySlug($slug);
+                    return;
+                }
+                $controller->showBySlug($slug);
                 return;
             }
         }

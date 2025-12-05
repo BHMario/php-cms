@@ -8,7 +8,7 @@
         </div>
 
         <?php if ($post): ?>
-            <form action="/posts/<?= $post['id'] ?>/update" method="post" enctype="multipart/form-data">
+            <form action="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>/update" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Título:</label>
                     <input type="text" name="title" id="title" value="<?= htmlspecialchars($post['title']) ?>" required>

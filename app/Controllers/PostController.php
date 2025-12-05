@@ -317,4 +317,105 @@ class PostController
         header("Location: /posts/{$postId}");
         exit;
     }
+
+    // ============ MÉTODOS POR SLUG (SEO-FRIENDLY) ============
+
+    public function showBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        $comments = [];
+        $likeCount = 0;
+        $userLiked = false;
+
+        require_once __DIR__ . '/../Models/Comment.php';
+        require_once __DIR__ . '/../Models/Like.php';
+        $commentModel = new Comment();
+        $likeModel = new Like();
+
+        if ($post) {
+            $comments = $commentModel->getByPost($post['id']);
+            $likeCount = $likeModel->countForPost($post['id']);
+            if (isset($_SESSION['user_id'])) {
+                $userLiked = $likeModel->userLiked($post['id'], $_SESSION['user_id']);
+            }
+        } else {
+            http_response_code(404);
+            echo "Post no encontrado";
+            exit;
+        }
+
+        $id = $post['id'];
+        require __DIR__ . '/../Views/post/show.php';
+    }
+
+    public function editBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        if (!$post) {
+            header('Location: /posts');
+            exit;
+        }
+
+        // Solo el propietario o admin puede editar
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+        $currentUser = $this->userModel->getById($_SESSION['user_id']);
+        if ($post['user_id'] != $_SESSION['user_id'] && $currentUser['role'] !== 'admin') {
+            header('Location: /posts');
+            exit;
+        }
+
+        $id = $post['id'];
+        require __DIR__ . '/../Views/post/edit.php';
+    }
+
+    public function updateBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        if (!$post) {
+            header('Location: /posts');
+            exit;
+        }
+
+        $id = $post['id'];
+        $this->update($id);
+    }
+
+    public function deleteBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        if (!$post) {
+            header('Location: /posts');
+            exit;
+        }
+
+        $id = $post['id'];
+        $this->delete($id);
+    }
+
+    public function commentBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        if (!$post) {
+            header('Location: /posts');
+            exit;
+        }
+
+        $postId = $post['id'];
+        $this->comment($postId);
+    }
+
+    public function likeBySlug($slug)
+    {
+        $post = $this->postModel->getBySlug($slug);
+        if (!$post) {
+            header('Location: /posts');
+            exit;
+        }
+
+        $postId = $post['id'];
+        $this->like($postId);
+    }
 }

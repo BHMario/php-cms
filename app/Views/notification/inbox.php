@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="notification-text">
                                     <strong><?php echo htmlspecialchars($notif['actor_username']); ?></strong> publicó: 
-                                    <a href="/posts/<?php echo (int)$notif['post_id']; ?>">
+                                    <a href="/posts/<?= htmlspecialchars($notif['slug'] ?? $notif['post_id']) ?>">
                                         <?php echo htmlspecialchars(substr($notif['post_title'], 0, 50)); ?>...
                                     </a>
                                     <div class="notification-time"><?php echo date('d/m/Y H:i', strtotime($notif['created_at'])); ?></div>
@@ -58,7 +58,7 @@
                                 <div class="notification-text">
                                     <strong><?php echo htmlspecialchars($notif['actor_username']); ?></strong> le dio like a tu publicación
                                     <div class="notification-time"><?php echo date('d/m/Y H:i', strtotime($notif['created_at'])); ?></div>
-                                    <div><a href="/posts/<?php echo (int)$notif['post_id']; ?>">Ver publicación</a></div>
+                                    <div><a href="/posts/<?php echo htmlspecialchars($notif['slug'] ?? $notif['post_id']); ?>">Ver publicación</a></div>
                                 </div>
                             <?php elseif ($notif['type'] === 'comment'): ?>
                                 <div class="notification-avatar">
@@ -71,7 +71,7 @@
                                 <div class="notification-text">
                                     <strong><?php echo htmlspecialchars($notif['actor_username']); ?></strong> comentó en tu publicación
                                     <div class="notification-time"><?php echo date('d/m/Y H:i', strtotime($notif['created_at'])); ?></div>
-                                    <div><a href="/posts/<?php echo (int)$notif['post_id']; ?>">Ver publicación</a></div>
+                                    <div><a href="/posts/<?php echo htmlspecialchars($notif['slug'] ?? $notif['post_id']); ?>">Ver publicación</a></div>
                                 </div>
                             <?php endif; ?>
                         </div>

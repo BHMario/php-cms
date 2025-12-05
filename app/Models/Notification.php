@@ -76,6 +76,7 @@ class Notification
                         u.username as actor_username,
                         u.profile_image as actor_profile_image,
                         p.title as post_title,
+                        p.slug as slug,
                         p.id as post_id
                       FROM notifications n
                       JOIN users u ON n.actor_id = u.id

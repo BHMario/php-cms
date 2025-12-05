@@ -36,7 +36,7 @@
 
             <div class="row-between divider-top" style="align-items:center;">
                 <div>
-                    <form action="/posts/<?= $post['id'] ?>/like" method="post" style="display:inline;">
+                    <form action="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>/like" method="post" style="display:inline;">
                         <button type="submit" class="btn" aria-pressed="<?= isset($userLiked) && $userLiked ? 'true' : 'false' ?>">
                             <?= isset($userLiked) && $userLiked ? '❤️' : '🤍' ?> Me gusta
                         </button>
@@ -47,8 +47,8 @@
 
                 <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']): ?>
                     <div>
-                        <a href="/posts/<?= $post['id'] ?>/edit" class="btn">Editar</a>
-                        <a href="/posts/<?= $post['id'] ?>/delete" class="btn btn-danger ml-1" onclick="return confirm('¿Estás seguro de eliminar este post?')">Eliminar</a>
+                        <a href="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>/edit" class="btn">Editar</a>
+                        <a href="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>/delete" class="btn btn-danger ml-1" onclick="return confirm('¿Estás seguro de eliminar este post?')">Eliminar</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -72,7 +72,7 @@
             <?php endif; ?>
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                <form action="/posts/<?= $post['id'] ?>/comment" method="post" style="margin-top:1rem;">
+                <form action="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>/comment" method="post" style="margin-top:1rem;">
                     <div class="form-group">
                         <label for="comment_content">Agregar comentario</label>
                         <textarea name="content" id="comment_content" rows="3" required></textarea>

@@ -7,10 +7,52 @@ class Post extends BaseModel
 {
     private ?int $id = null;
     private ?string $title = null;
+    private ?string $slug = null;
     private ?string $content = null;
     private ?string $image = null;
     private ?int $user_id = null;
     private ?int $category_id = null;
+
+    /**
+     * Generar slug SEO-friendly a partir del título
+     * Ej: "Mi Primer Post!" -> "mi-primer-post"
+     * 
+     * @param string $text
+     * @return string slug
+     */
+    public function generateSlug(string $text): string
+    {
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+        $text = preg_replace('/[^a-z0-9]+/i', '-', $text);
+        $text = trim($text, '-');
+        $text = strtolower($text);
+        
+        // Limitar a 200 caracteres
+        return substr($text, 0, 200);
+    }
+
+    /**
+     * Asegurar que el slug es único agregando sufijo si es necesario
+     * 
+     * @param string $slug
+     * @return string slug único
+     */
+    private function ensureUniqueSlug(string $slug): string
+    {
+        $original = $slug;
+        $counter = 1;
+        
+        while ($this->db->fetch("SELECT id FROM posts WHERE slug = ?", [$slug])) {
+            $slug = $original . '-' . $counter++;
+            if ($counter > 1000) {
+                // Fallback: agregar timestamp si hay muchos duplicados
+                $slug = $original . '-' . time();
+                break;
+            }
+        }
+        
+        return $slug;
+    }
 
     // Crear nuevo post
     // Devuelve la fila creada como array para mantener compatibilidad con vistas/controlladores antiguos
@@ -23,12 +65,15 @@ class Post extends BaseModel
             $this->validateId($category_id);
         }
         
+        $slug = $this->ensureUniqueSlug($this->generateSlug($title));
+        
         $this->db->query(
-            "INSERT INTO posts (title, content, user_id, category_id, image) VALUES (?, ?, ?, ?, ?)",
-            [$title, $content, $user_id, $category_id, $image]
+            "INSERT INTO posts (title, slug, content, user_id, category_id, image) VALUES (?, ?, ?, ?, ?, ?)",
+            [$title, $slug, $content, $user_id, $category_id, $image]
         );
         $this->id = (int)$this->db->lastInsertId();
         $this->title = $title;
+        $this->slug = $slug;
         $this->content = $content;
         $this->user_id = $user_id;
         $this->category_id = $category_id;
@@ -71,9 +116,11 @@ class Post extends BaseModel
             $this->validateId($category_id);
         }
         
+        $slug = $this->ensureUniqueSlug($this->generateSlug($title));
+        
         $this->db->query(
-            "UPDATE posts SET title = ?, content = ?, category_id = ?, image = ? WHERE id = ?",
-            [$title, $content, $category_id, $image, $id]
+            "UPDATE posts SET title = ?, slug = ?, content = ?, category_id = ?, image = ? WHERE id = ?",
+            [$title, $slug, $content, $category_id, $image, $id]
         );
     }
 
@@ -89,6 +136,13 @@ class Post extends BaseModel
     {
         $this->validateId($id);
         return $this->db->fetch("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?", [$id]);
+    }
+
+    // Obtener post por slug (SEO-friendly)
+    public function getBySlug(string $slug): ?array
+    {
+        $this->validateNotEmpty($slug, 'slug');
+        return $this->db->fetch("SELECT p.*, u.username, u.profile_image FROM posts p JOIN users u ON p.user_id = u.id WHERE p.slug = ?", [$slug]);
     }
 
     // Obtener todos los posts
@@ -178,6 +232,11 @@ class Post extends BaseModel
         return $this->category_id;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
     // ============ SETTERS ============
     public function setTitle(string $title): self
     {
@@ -213,6 +272,7 @@ class Post extends BaseModel
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'slug' => $this->slug,
             'content' => $this->content,
             'image' => $this->image,
             'user_id' => $this->user_id,

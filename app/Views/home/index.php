@@ -16,7 +16,7 @@
                             <?php if (!empty($post['image'])): ?>
                                 <img src="/<?= htmlspecialchars($post['image']) ?>" alt="Imagen del post" class="post-image">
                             <?php endif; ?>
-                            <h2 class="card-title"><a class="card-link" href="/posts/<?= $post['id'] ?>"><?= htmlspecialchars($post['title']) ?></a></h2>
+                            <h2 class="card-title"><a class="card-link" href="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>"><?= htmlspecialchars($post['title']) ?></a></h2>
                             <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 200))) ?>...</p>
                             <div class="card-meta" style="display:flex; align-items:center; gap:0.6rem;">
                                 <?php $authorImg = !empty($post['profile_image']) ? $post['profile_image'] : 'assets/images/default-avatar.svg'; ?>
@@ -28,7 +28,7 @@
                                 <span>💬 <?= $post['comment_count'] ?? 0 ?></span>
                             </div>
                             <div class="card-cta">
-                                <a href="/posts/<?= $post['id'] ?>" class="btn">Leer más</a>
+                                <a href="/posts/<?= htmlspecialchars($post['slug'] ?? $post['id']) ?>" class="btn">Leer más</a>
                             </div>
                         </article>
                     <?php endforeach; ?>
