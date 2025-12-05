@@ -111,49 +111,6 @@ La lista completa de rutas está en este repositorio y el enrutador principal (`
 
 ---
 
-## 🎓 Estado del Proyecto (Rúbrica)
-
-**Puntuación Actual: 9.5/10** ⭐
-
-- ✅ **POO (3.0/3.0)** - BaseModel, ServiceContainer, Interfaces
-- ✅ **Enrutamiento SEO (2.0/2.0)** - Slugs en URLs (`/posts/mi-slug`)
-- ✅ **PDO Prepared Statements (1.8/1.8)** - Zero SQL injection
-- ✅ **Autenticación (1.0/1.0)** - Login, registro, sesiones
-- ✅ **Manejo de Archivos (1.0/1.0)** - Upload seguro de imágenes
-- ⚠️  **Documentación (0.5/1.0)** - Falta: diagramas PlantUML
-
-**Para 10/10:** Generar diagramas PlantUML (class, use case, sequence)
-
----
-
-## 📚 Documentación Técnica
-
-- **PROGRESS.md** - Estado completo del proyecto
-- **REFACTOR_POO_SUMMARY.md** - Detalles del refactor POO
-- **ENRUTAMIENTO_COMPLETADO.md** - Sistema de slugs
-- **BD_INIT_CENTRALIZADO.md** - Inicializador centralizado
-- **QUICK_START_BD_INIT.md** - Guía rápida
-- **REFACTOR_BD_INIT.md** - Resumen ejecutivo
-
----
-
-- Cambia la contraseña del admin inmediatamente después de crear la instalación.
-- No uses `root` con contraseña vacía en producción: actualiza `config/config.php` con un usuario seguro.
-- Asegura la carpeta `public/uploads/` con permisos correctos y, en producción, sirve el contenido desde un servidor web (Apache/Nginx) configurado con `public/` como document root.
-
----
-
-Si quieres, puedo:
-
-- Generar un archivo `.env` y adaptar `config/config.php` para leer variables de entorno.
-- Agregar instrucciones para Docker/Compose.
-
----
-
-✅ Solución: Limpia la caché del navegador y recarga la página (Ctrl+Shift+R)
-
----
-
 ## 📚 Documentación del Código
 
 ### Ejemplo: Crear un Post
@@ -288,18 +245,6 @@ php-cms/
 ├── .gitignore                          # Archivos ignorados
 └── README.md                           # Este archivo
 ```
-
-### ✨ Cambios Recientes (Refactor POO + BD Initialization)
-
-- **BaseModel.php** - Clase abstracta con encapsulación
-- **ServiceContainer.php** - Inyección de dependencias
-- **Uploadable.php** - Interface para polimorfismo
-- **database/init.php** - Inicializador centralizado e idempotente
-- **Post.php** - Sistema de slugs SEO-friendly
-- **Router.php** - Dual routing (ID y slugs)
-- **Documentación** - 6 archivos markdown con detalles técnicos
-
----
 
 ## 👨‍💻 Autor
 
