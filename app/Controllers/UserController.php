@@ -1,14 +1,20 @@
 <?php
 
 require_once __DIR__ . '/../Models/User.php';
+require_once __DIR__ . '/../Models/Database.php';
+require_once __DIR__ . '/../Services/Uploader.php';
 
 class UserController
 {
     private $userModel;
+    private $uploader;
+    private $db;
 
     public function __construct()
     {
-        $this->userModel = new User();
+        $this->db = new Database();
+        $this->userModel = new User($this->db);
+        $this->uploader = new Uploader();
     }
 
     public function login()
@@ -88,23 +94,13 @@ class UserController
 
             // Procesar imagen de perfil (opcional)
             if (!empty($_FILES['profile_image']) && $_FILES['profile_image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                $file = $_FILES['profile_image'];
-                $allowed = ['image/jpeg','image/png','image/gif'];
-                if ($file['error'] === UPLOAD_ERR_OK && in_array(mime_content_type($file['tmp_name']), $allowed)) {
-                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $newName = 'profile_' . $_SESSION['user_id'] . '_' . time() . '.' . $ext;
-                    $targetDir = __DIR__ . '/../../public/uploads/profiles';
-                    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
-                    $target = $targetDir . '/' . $newName;
-                    if (move_uploaded_file($file['tmp_name'], $target)) {
-                        $this->userModel->updateProfileImage($_SESSION['user_id'], 'uploads/profiles/' . $newName);
-                        $success = ($success ? $success . ' ' : '') . 'Foto de perfil actualizada.';
-                        $user = $this->userModel->getById($_SESSION['user_id']);
-                    } else {
-                        $error = 'Error al subir la imagen.';
-                    }
-                } else {
-                    $error = 'Formato de imagen no válido. Usa JPG, PNG o GIF.';
+                try {
+                    $publicPath = $this->uploader->store($_FILES['profile_image'], 'profiles');
+                    $this->userModel->updateProfileImage($_SESSION['user_id'], $publicPath);
+                    $success = ($success ? $success . ' ' : '') . 'Foto de perfil actualizada.';
+                    $user = $this->userModel->getById($_SESSION['user_id']);
+                } catch (RuntimeException $e) {
+                    $error = $e->getMessage();
                 }
             }
 

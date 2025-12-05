@@ -1,18 +1,33 @@
 <?php
 
+/**
+ * Notification - Modelo para gestión de notificaciones
+ * Maneja creación, lectura y eliminación de notificaciones del sistema
+ */
 class Notification
 {
-    private $db;
+    private \PDO $db;
 
-    public function __construct($database)
+    /**
+     * Constructor que recibe instancia PDO directa
+     * 
+     * @param \PDO $database
+     */
+    public function __construct(\PDO $database)
     {
         $this->db = $database;
     }
 
     /**
-     * Crear una notificación
+     * Crear una notificación, evitando duplicados en los últimos 10 segundos
+     * 
+     * @param int $userId ID del usuario que recibe la notificación
+     * @param int $actorId ID del usuario que genera la notificación
+     * @param string $type Tipo: 'follow', 'like', 'comment'
+     * @param int|null $postId ID del post relacionado (opcional)
+     * @return bool true si se creó, false si ya existe o error
      */
-    public function create($userId, $actorId, $type = 'follow', $postId = null)
+    public function create(int $userId, int $actorId, string $type = 'follow', ?int $postId = null): bool
     {
         try {
             $params = [$userId, $actorId, $type];
@@ -43,12 +58,16 @@ class Notification
     }
 
     /**
-     * Obtener todas las notificaciones de un usuario
+     * Obtener notificaciones de un usuario con límite
+     * 
+     * @param int $userId
+     * @param int $limit
+     * @return array
      */
-    public function getByUserId($userId, $limit = 20)
+    public function getByUserId(int $userId, int $limit = 20): array
     {
         try {
-            $limit = (int)$limit;
+            $limit = max(1, (int)$limit);
             $query = "SELECT 
                         n.id,
                         n.type,
@@ -66,7 +85,7 @@ class Notification
                       LIMIT " . $limit;
             $stmt = $this->db->prepare($query);
             $stmt->execute([$userId]);
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC) ?? [];
         } catch (\Exception $e) {
             error_log("Error fetching notifications: " . $e->getMessage());
             return [];
@@ -74,25 +93,31 @@ class Notification
     }
 
     /**
-     * Contar notificaciones sin leer de un usuario
+     * Contar notificaciones sin leer
+     * 
+     * @param int $userId
+     * @return int
      */
-    public function countUnread($userId)
+    public function countUnread(int $userId): int
     {
         try {
             $query = "SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = FALSE";
             $stmt = $this->db->prepare($query);
             $stmt->execute([$userId]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-            return $result['count'] ?? 0;
+            return (int)($result['count'] ?? 0);
         } catch (\Exception $e) {
             return 0;
         }
     }
 
     /**
-     * Marcar notificación como leída
+     * Marcar una notificación como leída
+     * 
+     * @param int $notificationId
+     * @return bool
      */
-    public function markAsRead($notificationId)
+    public function markAsRead(int $notificationId): bool
     {
         try {
             $query = "UPDATE notifications SET is_read = TRUE WHERE id = ?";
@@ -106,8 +131,11 @@ class Notification
 
     /**
      * Marcar todas las notificaciones de un usuario como leídas
+     * 
+     * @param int $userId
+     * @return bool
      */
-    public function markAllAsRead($userId)
+    public function markAllAsRead(int $userId): bool
     {
         try {
             $query = "UPDATE notifications SET is_read = TRUE WHERE user_id = ? AND is_read = FALSE";
@@ -121,8 +149,11 @@ class Notification
 
     /**
      * Eliminar una notificación
+     * 
+     * @param int $notificationId
+     * @return bool
      */
-    public function delete($notificationId)
+    public function delete(int $notificationId): bool
     {
         try {
             $query = "DELETE FROM notifications WHERE id = ?";
@@ -136,8 +167,12 @@ class Notification
 
     /**
      * Verificar si ya existe una notificación de seguimiento
+     * 
+     * @param int $userId
+     * @param int $actorId
+     * @return bool
      */
-    public function followNotificationExists($userId, $actorId)
+    public function followNotificationExists(int $userId, int $actorId): bool
     {
         try {
             $query = "SELECT COUNT(*) as count FROM notifications 
@@ -145,10 +180,9 @@ class Notification
             $stmt = $this->db->prepare($query);
             $stmt->execute([$userId, $actorId]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-            return $result['count'] > 0;
+            return (int)($result['count'] ?? 0) > 0;
         } catch (\Exception $e) {
             return false;
         }
     }
 }
-?>

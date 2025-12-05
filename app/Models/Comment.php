@@ -1,18 +1,17 @@
 <?php
+
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseModel.php';
 require_once __DIR__ . '/Notification.php';
 
-class Comment
+class Comment extends BaseModel
 {
-    private $db;
-
-    public function __construct()
+    public function create(int $post_id, int $user_id, string $content): int
     {
-        $this->db = new Database();
-    }
+        $this->validateId($post_id);
+        $this->validateId($user_id);
+        $this->validateNotEmpty($content, 'content');
 
-    public function create($post_id, $user_id, $content)
-    {
         $this->db->query(
             "INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)",
             [$post_id, $user_id, $content]
@@ -26,23 +25,33 @@ class Comment
                 $notification->create($post['user_id'], $user_id, 'comment', $post_id);
             }
         } catch (Exception $e) {
-            
+            // Silenciar errores de notificación
         }
 
-        return $this->db->lastInsertId();
+        return (int)$this->db->lastInsertId();
     }
 
-    public function getByPost($post_id)
+    public function getByPost(int $post_id): array
     {
+        $this->validateId($post_id);
+        
         return $this->db->fetchAll(
             "SELECT c.*, u.username, u.profile_image FROM comments c JOIN users u ON c.user_id = u.id WHERE c.post_id = ? ORDER BY c.created_at ASC",
             [$post_id]
-        );
+        ) ?? [];
     }
 
-    public function countForPost($post_id)
+    public function countForPost(int $post_id): int
     {
+        $this->validateId($post_id);
+        
         $row = $this->db->fetch("SELECT COUNT(*) as cnt FROM comments WHERE post_id = ?", [$post_id]);
         return $row ? (int)$row['cnt'] : 0;
+    }
+
+    public function delete(int $id): void
+    {
+        $this->validateId($id);
+        $this->db->query("DELETE FROM comments WHERE id = ?", [$id]);
     }
 }
