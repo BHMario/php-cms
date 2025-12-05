@@ -118,13 +118,19 @@ class PostController
                 foreach ($raw as $r) {
                     $n = trim($r);
                     if ($n === '') continue;
-                    $ids[] = $tagModel->getOrCreate($n);
-                }
-                $this->postModel->setTags($post->id, $ids);
+                        $ids[] = $tagModel->getOrCreate($n);
+                    }
+                    $postId = method_exists($post, 'getId') ? $post->getId() : ($post['id'] ?? null);
+                    if ($postId !== null) {
+                        $this->postModel->setTags((int)$postId, $ids);
+                    }
             }
             
-            // Notificar a los seguidores sobre el nuevo post
-            $this->notifyFollowers($_SESSION['user_id'], $post->id);
+                // Notificar a los seguidores sobre el nuevo post
+                $postIdForNotify = method_exists($post, 'getId') ? $post->getId() : ($post['id'] ?? null);
+                if ($postIdForNotify !== null) {
+                    $this->notifyFollowers($_SESSION['user_id'], (int)$postIdForNotify);
+                }
         }
 
         header("Location: /posts");
