@@ -111,7 +111,13 @@ nav {
     border: none;
     padding: 0.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* Animación del botón al hacer clic */
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sidebar-menu-toggle:active {
+    transform: scale(0.95);
+    opacity: 0.8;
 }
 
 .sidebar-menu-toggle span {
@@ -1043,12 +1049,49 @@ footer .container { padding: 1rem 0; }
     border-right: 1px solid var(--card-border);
     padding: 1.5rem;
     overflow-y: auto;
-    transition: left 0.3s ease;
     z-index: 99;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0);
+    /* Animación de desaparición más notoria */
+    animation: sidebar-hide 0.5s cubic-bezier(0.6, 0.04, 1, 0.52) forwards;
 }
 
 .sidebar-content.open {
     left: 0;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    /* Animación de aparición más notoria */
+    animation: sidebar-show 0.5s cubic-bezier(0.04, 0.48, 0.6, 0.96) forwards;
+}
+
+/* Animación dramática: deslizamiento + fade in + escala + sombra */
+@keyframes sidebar-show {
+    from {
+        left: -280px;
+        opacity: 0;
+        transform: scaleX(0.8);
+        box-shadow: -10px 0 20px rgba(0, 0, 0, 0);
+    }
+    to {
+        left: 0;
+        opacity: 1;
+        transform: scaleX(1);
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Animación dramática: deslizamiento + fade out + escala + sombra */
+@keyframes sidebar-hide {
+    from {
+        left: 0;
+        opacity: 1;
+        transform: scaleX(1);
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    }
+    to {
+        left: -280px;
+        opacity: 0;
+        transform: scaleX(0.8);
+        box-shadow: -10px 0 20px rgba(0, 0, 0, 0);
+    }
 }
 
 .sidebar-content h3 {
