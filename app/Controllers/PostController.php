@@ -10,13 +10,18 @@ class PostController
     private $postModel;
     private $userModel;
     private $notificationModel;
+    private $db;
 
-    public function __construct()
+    /**
+     * Constructor con inyección opcional de dependencias.
+     * Si no se proporcionan, se crean instancias por compatibilidad.
+     */
+    public function __construct(?Database $db = null, ?Post $postModel = null, ?User $userModel = null)
     {
-        $this->postModel = new Post();
-        $this->userModel = new User();
-        $db = new Database();
-        $this->notificationModel = new Notification($db->getConnection());
+        $this->db = $db instanceof Database ? $db : new Database();
+        $this->postModel = $postModel ?? new Post($this->db);
+        $this->userModel = $userModel ?? new User($this->db);
+        $this->notificationModel = new Notification($this->db->getConnection());
     }
 
     public function index()
@@ -120,14 +125,30 @@ class PostController
                     if ($n === '') continue;
                         $ids[] = $tagModel->getOrCreate($n);
                     }
-                    $postId = method_exists($post, 'getId') ? $post->getId() : ($post['id'] ?? null);
+                    // Normalizar según el tipo: objeto (model) o array (compatibilidad)
+                    if (is_object($post) && method_exists($post, 'getId')) {
+                        $postId = $post->getId();
+                    } elseif (is_array($post)) {
+                        $postId = $post['id'] ?? null;
+                    } else {
+                        $postId = null;
+                    }
+
                     if ($postId !== null) {
                         $this->postModel->setTags((int)$postId, $ids);
                     }
             }
             
                 // Notificar a los seguidores sobre el nuevo post
-                $postIdForNotify = method_exists($post, 'getId') ? $post->getId() : ($post['id'] ?? null);
+                // ID seguro para notificaciones (objeto o array)
+                if (is_object($post) && method_exists($post, 'getId')) {
+                    $postIdForNotify = $post->getId();
+                } elseif (is_array($post)) {
+                    $postIdForNotify = $post['id'] ?? null;
+                } else {
+                    $postIdForNotify = null;
+                }
+
                 if ($postIdForNotify !== null) {
                     $this->notifyFollowers($_SESSION['user_id'], (int)$postIdForNotify);
                 }
